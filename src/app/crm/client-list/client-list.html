@@ -12,11 +12,13 @@
       <h1 class="page-title">Client & Investor CRM Directory</h1>
       <p class="page-subtitle">Track prospective buyers, institutional investors, and their investment budgets.</p>
     </div>
-    <div class="header-actions">
-      <button type="button" class="btn btn-primary" (click)="openAddModal()">
-        + Add New Client
-      </button>
-    </div>
+    @if (isAdmin$ | async) {
+      <div class="header-actions">
+        <button type="button" class="btn btn-primary" (click)="openAddModal()">
+          + Add New Client
+        </button>
+      </div>
+    }
   </header>
 
   <!-- Search Filter -->
@@ -82,26 +84,28 @@
                     <span class="type-pill">{{ c.preferredType || 'Any' }}</span>
                   </td>
 
-                  <!-- Actions -->
+                  <!-- Actions (Admin only for edit/delete) -->
                   <td class="text-right">
-                    <div class="actions-group">
-                      <button
-                        type="button"
-                        class="btn-icon edit-btn"
-                        (click)="openEditModal(c)"
-                        title="Edit client"
-                      >
-                        &#9998;
-                      </button>
-                      <button
-                        type="button"
-                        class="btn-icon delete-btn"
-                        (click)="deleteClient(c.id, c.name)"
-                        title="Delete client"
-                      >
-                        &#128465;
-                      </button>
-                    </div>
+                    @if (isAdmin$ | async) {
+                      <div class="actions-group">
+                        <button
+                          type="button"
+                          class="btn-icon edit-btn"
+                          (click)="openEditModal(c)"
+                          title="Edit client"
+                        >
+                          &#9998;
+                        </button>
+                        <button
+                          type="button"
+                          class="btn-icon delete-btn"
+                          (click)="deleteClient(c.id, c.name)"
+                          title="Delete client"
+                        >
+                          &#128465;
+                        </button>
+                      </div>
+                    }
                   </td>
                 </tr>
               }
@@ -114,22 +118,17 @@
       <div class="empty-clients-box">
         <div class="empty-icon">&#128101;</div>
         <h3>No Clients Found</h3>
-        <p>No client records match your query. Add a new prospective buyer or clear the search query.</p>
-        <button type="button" class="btn btn-primary" (click)="openAddModal()">
-          Register Client
-        </button>
+        <p>No client records match your search filter.</p>
       </div>
     }
   }
 
-  <!-- Add / Edit Modal -->
-  @if (showModal) {
+  <!-- Add / Edit Client Modal (Admin Only) -->
+  @if (showModal && (isAdmin$ | async)) {
     <div class="modal-backdrop" (click)="closeModal()">
-      <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h2 class="modal-title">
-            {{ editingClientId ? 'Edit Client Record' : 'Register New Client' }}
-          </h2>
+          <h3 class="modal-title">{{ editingClientId ? 'Edit Client Record' : 'Add New Client Profile' }}</h3>
           <button type="button" class="close-btn" (click)="closeModal()">&times;</button>
         </div>
 

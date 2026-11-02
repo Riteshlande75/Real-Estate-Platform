@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgentService } from '../../core/services/agent.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Agent } from '../../core/models/models';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,7 +15,11 @@ import { map } from 'rxjs/operators';
 })
 export class AgentList {
   private readonly agentService = inject(AgentService);
+  private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
+
+  /** Admin privilege stream for template rendering */
+  readonly isAdmin$: Observable<boolean> = this.authService.isAdmin$;
 
   // Search filter subject
   readonly searchSubject = new BehaviorSubject<string>('');
@@ -64,9 +69,14 @@ export class AgentList {
   }
 
   /**
-   * Opens modal to add a brand new agent
+   * Opens modal to add a brand new agent (restricted to Admin)
    */
   openAddModal(): void {
+    if (!this.authService.isAdmin()) {
+      this.showToast('Access restricted: Only administrators can register new agents.');
+      return;
+    }
+
     this.editingAgentId = null;
     this.agentForm.reset({
       name: '',
@@ -81,9 +91,14 @@ export class AgentList {
   }
 
   /**
-   * Opens modal to edit an existing agent
+   * Opens modal to edit an existing agent (restricted to Admin)
    */
   openEditModal(agent: Agent): void {
+    if (!this.authService.isAdmin()) {
+      this.showToast('Access restricted: Only administrators can edit agent details.');
+      return;
+    }
+
     this.editingAgentId = agent.id;
     this.agentForm.patchValue({
       name: agent.name,
@@ -109,6 +124,11 @@ export class AgentList {
    * Handles agent form submission (add/update)
    */
   saveAgent(): void {
+    if (!this.authService.isAdmin()) {
+      this.showToast('Access Denied: Only administrators have write permissions for agents.');
+      return;
+    }
+
     if (this.agentForm.invalid) {
       this.agentForm.markAllAsTouched();
       return;
@@ -139,9 +159,14 @@ export class AgentList {
   }
 
   /**
-   * Prompts and deletes an agent record
+   * Prompts and deletes an agent record (restricted to Admin)
    */
   deleteAgent(id: string, name: string): void {
+    if (!this.authService.isAdmin()) {
+      this.showToast('Access Denied: Only administrators can delete agents.');
+      return;
+    }
+
     if (window.confirm(`Are you sure you want to delete agent "${name}"?`)) {
       this.agentService.delete(id).subscribe(() => {
         this.showToast(`Agent "${name}" removed from registry.`);

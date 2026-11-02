@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientService } from '../../core/services/client.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Client } from '../../core/models/models';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,7 +15,11 @@ import { map } from 'rxjs/operators';
 })
 export class ClientList {
   private readonly clientService = inject(ClientService);
+  private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
+
+  /** Admin privilege stream for template rendering */
+  readonly isAdmin$: Observable<boolean> = this.authService.isAdmin$;
 
   // Search filter stream
   readonly searchSubject = new BehaviorSubject<string>('');
@@ -71,6 +76,11 @@ export class ClientList {
   }
 
   openAddModal(): void {
+    if (!this.authService.isAdmin()) {
+      this.showToast('Access restricted: Only administrators can add new clients.');
+      return;
+    }
+
     this.editingClientId = null;
     this.clientForm.reset({
       name: '',
@@ -84,6 +94,11 @@ export class ClientList {
   }
 
   openEditModal(client: Client): void {
+    if (!this.authService.isAdmin()) {
+      this.showToast('Access restricted: Only administrators can edit client records.');
+      return;
+    }
+
     this.editingClientId = client.id;
     this.clientForm.patchValue({
       name: client.name,
@@ -102,6 +117,11 @@ export class ClientList {
   }
 
   saveClient(): void {
+    if (!this.authService.isAdmin()) {
+      this.showToast('Access Denied: Only administrators have write permissions for clients.');
+      return;
+    }
+
     if (this.clientForm.invalid) {
       this.clientForm.markAllAsTouched();
       return;
@@ -127,6 +147,11 @@ export class ClientList {
   }
 
   deleteClient(id: string, name: string): void {
+    if (!this.authService.isAdmin()) {
+      this.showToast('Access Denied: Only administrators can delete client records.');
+      return;
+    }
+
     if (window.confirm(`Are you sure you want to delete client record "${name}"?`)) {
       this.clientService.delete(id).subscribe(() => {
         this.showToast(`Client "${name}" deleted.`);

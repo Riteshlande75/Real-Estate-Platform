@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface AuthUser {
   username: string;
@@ -53,6 +54,13 @@ export class AuthService {
   public readonly isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   /**
+   * Observable stream that emits true if the active authenticated user has the 'admin' role.
+   */
+  public readonly isAdmin$: Observable<boolean> = this.currentUserSubject.pipe(
+    map((user) => user?.role === 'admin')
+  );
+
+  /**
    * Attempts to authenticate user credentials against mock records.
    * On success, persists user profile to localStorage and emits status.
    */
@@ -88,6 +96,13 @@ export class AuthService {
   }
 
   /**
+   * Synchronous check whether current user has administrator privileges.
+   */
+  isAdmin(): boolean {
+    return this.currentUserSubject.getValue()?.role === 'admin';
+  }
+
+  /**
    * Returns current active user object, or null if unauthenticated.
    */
   getUser(): AuthUser | null {
@@ -99,40 +114,32 @@ export class AuthService {
    */
   private getStoredUser(): AuthUser | null {
     try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        const raw = localStorage.getItem(this.storageKey);
-        return raw ? (JSON.parse(raw) as AuthUser) : null;
-      }
-    } catch (e) {
-      console.warn('LocalStorage error reading auth user:', e);
+      const data = localStorage.getItem(this.storageKey);
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
     }
-    return null;
   }
 
   /**
-   * Safe helper to save user to localStorage.
+   * Safe helper to write session to localStorage.
    */
   private saveUserToStorage(user: AuthUser): void {
     try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        localStorage.setItem(this.storageKey, JSON.stringify(user));
-      }
+      localStorage.setItem(this.storageKey, JSON.stringify(user));
     } catch (e) {
-      console.warn('LocalStorage error saving auth user:', e);
+      console.warn('Unable to persist session to localStorage', e);
     }
   }
 
   /**
-   * Safe helper to clear user from localStorage.
+   * Safe helper to remove session from localStorage.
    */
   private removeUserFromStorage(): void {
     try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        localStorage.removeItem(this.storageKey);
-      }
+      localStorage.removeItem(this.storageKey);
     } catch (e) {
-      console.warn('LocalStorage error removing auth user:', e);
+      console.warn('Unable to remove session from localStorage', e);
     }
   }
 }
-
