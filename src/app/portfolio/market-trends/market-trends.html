@@ -1,0 +1,63 @@
+<div class="trends-container">
+  <!-- Header -->
+  <header class="trends-header">
+    <div class="header-info">
+      <h1 class="page-title">Regional Real Estate Market Trends</h1>
+      <p class="page-subtitle">Track historical capital appreciation trends and average price per square foot across key metros.</p>
+    </div>
+
+    <!-- City Selector Dropdown -->
+    <div class="city-selector-group">
+      <label for="citySelect" class="selector-label">Target Market:</label>
+      <select
+        id="citySelect"
+        class="city-select"
+        [ngModel]="selectedCity"
+        (ngModelChange)="onCityChange($event)"
+      >
+        @for (c of cities$ | async; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+    </div>
+  </header>
+
+  <!-- Metric Callout Cards -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <span class="kpi-title">Current Average Rate</span>
+      <div class="kpi-val text-blue">₹{{ currentRate }} <span class="unit">/ sq ft</span></div>
+      <span class="kpi-desc">Latest benchmark in {{ selectedCity }}</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-title">6-Month Capital Growth</span>
+      <div class="kpi-val text-green">+{{ rateChangePercent }}%</div>
+      <span class="kpi-desc">Appreciation velocity</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-title">Absolute Price Increase</span>
+      <div class="kpi-val text-green">+₹{{ rateChange }} <span class="unit">/ sq ft</span></div>
+      <span class="kpi-desc">Past 2 quarters net increase</span>
+    </div>
+  </div>
+
+  <!-- Interactive Line Chart Card -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h2 class="chart-title">{{ selectedCity }} — Monthly Price / Sq Ft Trajectory</h2>
+      <span class="chart-period">Last 6 Months (Aug 2025 – Jan 2026)</span>
+    </div>
+
+    <div class="chart-wrapper">
+      <canvas
+        baseChart
+        [data]="lineChartData"
+        [options]="lineChartOptions"
+        [type]="lineChartType"
+      >
+      </canvas>
+    </div>
+  </div>
+</div>

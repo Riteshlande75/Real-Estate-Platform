@@ -1,0 +1,52 @@
+[
+  {
+    "id": "inv-1",
+    "propertyId": "prop-101",
+    "propertyTitle": "Luxury Sea-Facing 3BHK Residence",
+    "city": "Mumbai",
+    "purchasePrice": 39000000,
+    "currentValue": 42500000,
+    "monthlyRent": 145000,
+    "purchaseDate": "2024-03-15"
+  },
+  {
+    "id": "inv-2",
+    "propertyId": "prop-102",
+    "propertyTitle": "Contemporary Gated Villa with Private Pool",
+    "city": "Bengaluru",
+    "purchasePrice": 29500000,
+    "currentValue": 32000000,
+    "monthlyRent": 110000,
+    "purchaseDate": "2024-06-20"
+  },
+  {
+    "id": "inv-3",
+    "propertyId": "prop-104",
+    "propertyTitle": "Smart 2BHK Urban Apartment",
+    "city": "Pune",
+    "purchasePrice": 8800000,
+    "currentValue": 9500000,
+    "monthlyRent": 36000,
+    "purchaseDate": "2025-01-10"
+  },
+  {
+    "id": "inv-4",
+    "propertyId": "prop-105",
+    "propertyTitle": "Prime Commercial Office Space",
+    "city": "Hyderabad",
+    "purchasePrice": 26000000,
+    "currentValue": 28000000,
+    "monthlyRent": 195000,
+    "purchaseDate": "2024-11-05"
+  },
+  {
+    "id": "inv-5",
+    "propertyId": "prop-107",
+    "propertyTitle": "Bespoke 3BHK Lakeview Residence",
+    "city": "Hyderabad",
+    "purchasePrice": 16500000,
+    "currentValue": 18200000,
+    "monthlyRent": 68000,
+    "purchaseDate": "2025-02-14"
+  }
+]

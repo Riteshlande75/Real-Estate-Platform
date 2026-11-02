@@ -1,0 +1,186 @@
+<div class="compare-page-container">
+  <!-- Page Header -->
+  <header class="compare-header">
+    <div class="header-info">
+      <h1 class="compare-title">Property Comparison Matrix</h1>
+      <p class="compare-subtitle">Evaluate structural, spatial, financial, and amenity metrics side-by-side.</p>
+    </div>
+
+    @if (count$ | async; as count) {
+      <div class="header-actions">
+        <span class="count-pill">
+          Comparing <strong>{{ count }}</strong> of {{ maxLimit }}
+        </span>
+
+        @if (count < maxLimit) {
+          <a routerLink="/search" class="btn btn-outline">
+            + Add Another Property
+          </a>
+        }
+
+        @if (count > 0) {
+          <button
+            type="button"
+            class="btn btn-danger-outline"
+            (click)="clearAll()"
+          >
+            Clear All
+          </button>
+        }
+      </div>
+    }
+  </header>
+
+  @if (properties$ | async; as properties) {
+    @if (properties.length >= 2) {
+      <!-- Comparison Table View -->
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th class="feature-col-header">Attribute / Metric</th>
+                @for (prop of properties; track prop.id) {
+                  <th class="property-col-header">
+                    <div class="prop-header-card">
+                      <button
+                        type="button"
+                        class="remove-col-btn"
+                        (click)="removeProperty(prop.id)"
+                        title="Remove from comparison"
+                      >
+                        &times; Remove
+                      </button>
+                      <img
+                        [src]="prop.images[0] || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80'"
+                        [alt]="prop.title"
+                        class="header-prop-img"
+                        loading="lazy"
+                      />
+                      <h3 class="header-prop-title" [title]="prop.title">{{ prop.title }}</h3>
+                      <div class="header-prop-price">{{ formatPrice(prop.price) }}</div>
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-sm view-btn"
+                        (click)="viewDetails(prop.id)"
+                      >
+                        View Full Details
+                      </button>
+                    </div>
+                  </th>
+                }
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- Section: Core Details -->
+              <tr class="section-row">
+                <td [attr.colspan]="properties.length + 1">Property Overview</td>
+              </tr>
+              <tr>
+                <td class="metric-label">Property Type</td>
+                @for (prop of properties; track prop.id) {
+                  <td class="metric-val">
+                    <span class="type-pill">{{ prop.type }}</span>
+                  </td>
+                }
+              </tr>
+              <tr>
+                <td class="metric-label">City</td>
+                @for (prop of properties; track prop.id) {
+                  <td class="metric-val font-semibold">{{ prop.city }}</td>
+                }
+              </tr>
+              <tr>
+                <td class="metric-label">Address / Locality</td>
+                @for (prop of properties; track prop.id) {
+                  <td class="metric-val text-muted">{{ prop.address }}</td>
+                }
+              </tr>
+
+              <!-- Section: Financial & Area -->
+              <tr class="section-row">
+                <td [attr.colspan]="properties.length + 1">Space & Valuation Metrics</td>
+              </tr>
+              <tr>
+                <td class="metric-label">Total Price (INR)</td>
+                @for (prop of properties; track prop.id) {
+                  <td class="metric-val price-highlight">{{ formatPrice(prop.price) }}</td>
+                }
+              </tr>
+              <tr>
+                <td class="metric-label">Built-up Area</td>
+                @for (prop of properties; track prop.id) {
+                  <td class="metric-val font-semibold">{{ prop.area }} sq ft</td>
+                }
+              </tr>
+              <tr>
+                <td class="metric-label">Price / Sq Ft</td>
+                @for (prop of properties; track prop.id) {
+                  <td class="metric-val font-semibold">₹{{ prop.pricePerSqFt }}</td>
+                }
+              </tr>
+              <tr>
+                <td class="metric-label">Bedrooms (BHK)</td>
+                @for (prop of properties; track prop.id) {
+                  <td class="metric-val">{{ prop.bedrooms > 0 ? prop.bedrooms + ' BHK' : 'N/A' }}</td>
+                }
+              </tr>
+              <tr>
+                <td class="metric-label">Bathrooms</td>
+                @for (prop of properties; track prop.id) {
+                  <td class="metric-val">{{ prop.bathrooms }}</td>
+                }
+              </tr>
+
+              <!-- Section: Amenities Comparison -->
+              <tr class="section-row">
+                <td [attr.colspan]="properties.length + 1">Amenities & Features Matrix</td>
+              </tr>
+              @for (amenity of comparisonAmenities; track amenity) {
+                <tr>
+                  <td class="metric-label">{{ amenity }}</td>
+                  @for (prop of properties; track prop.id) {
+                    <td class="metric-val text-center">
+                      @if (hasAmenity(prop, amenity)) {
+                        <span class="amenity-yes" title="Included">&#10003;</span>
+                      } @else {
+                        <span class="amenity-no" title="Not available">&#8212;</span>
+                      }
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else if (properties.length === 1) {
+      <!-- 1 Property Selected State -->
+      <div class="empty-compare-card">
+        <div class="empty-icon">&#9878;</div>
+        <h2>1 Property Selected for Comparison</h2>
+        <p>
+          You have selected <strong>"{{ properties[0].title }}"</strong>. Please select at least one more property (up to 3) to enable the side-by-side comparison table.
+        </p>
+        <div class="empty-actions">
+          <a routerLink="/search" class="btn btn-primary">Find More Properties</a>
+          <button type="button" class="btn btn-secondary" (click)="clearAll()">Remove Selected</button>
+        </div>
+      </div>
+    } @else {
+      <!-- Zero Properties Selected State -->
+      <div class="empty-compare-card">
+        <div class="empty-icon">&#9878;</div>
+        <h2>No Properties in Comparison</h2>
+        <p>
+          You can compare up to 3 properties simultaneously across prices, area, bedroom count, price per square foot, and amenity features.
+        </p>
+        <div class="empty-actions">
+          <a routerLink="/properties" class="btn btn-primary">Browse Property Directory</a>
+          <a routerLink="/search" class="btn btn-secondary">Search With Filters</a>
+        </div>
+      </div>
+    }
+  }
+</div>

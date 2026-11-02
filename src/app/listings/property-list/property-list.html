@@ -1,0 +1,133 @@
+<div class="property-list-page">
+  <!-- Toast Feedback Notification -->
+  @if (toastMessage) {
+    <div class="toast-notification">
+      {{ toastMessage }}
+    </div>
+  }
+
+  <!-- Header Section -->
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Prime Property Listings</h1>
+      <p class="page-subtitle">Discover premium verified residential & commercial properties across India</p>
+    </div>
+    <div class="header-actions">
+      <a routerLink="/properties/new" class="btn btn-primary add-btn">
+        <span class="btn-icon">+</span> Add New Listing
+      </a>
+    </div>
+  </header>
+
+  <!-- Property Grid -->
+  @if (properties$ | async; as properties) {
+    @if (properties.length > 0) {
+      <div class="properties-grid">
+        @for (prop of properties; track prop.id) {
+          <article class="property-card" (click)="viewDetails(prop.id)">
+            <!-- Card Media -->
+            <div class="card-media">
+              <img
+                [src]="prop.images[0] || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'"
+                [alt]="prop.title"
+                class="card-img"
+                loading="lazy"
+              />
+              <div class="badge-group">
+                <span class="badge type-badge">{{ prop.type }}</span>
+                @if (prop.featured) {
+                  <span class="badge featured-badge">Featured</span>
+                }
+              </div>
+              <div class="price-overlay">
+                {{ formatPrice(prop.price) }}
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+              <h2 class="property-title" [title]="prop.title">{{ prop.title }}</h2>
+              <p class="property-location">
+                <span class="location-icon">&#128205;</span>
+                <span class="location-text">{{ prop.address }}</span>
+              </p>
+
+              <!-- Key Specs -->
+              <div class="property-specs">
+                @if (prop.bedrooms > 0) {
+                  <span class="spec-item">
+                    <strong>{{ prop.bedrooms }}</strong> Beds
+                  </span>
+                  <span class="spec-divider">•</span>
+                }
+                @if (prop.bathrooms > 0) {
+                  <span class="spec-item">
+                    <strong>{{ prop.bathrooms }}</strong> Baths
+                  </span>
+                  <span class="spec-divider">•</span>
+                }
+                <span class="spec-item">
+                  <strong>{{ prop.area }}</strong> sq ft
+                </span>
+              </div>
+
+              <!-- Price per sq ft -->
+              <div class="price-rate">
+                {{ formatPricePerSqFt(prop.pricePerSqFt) }}
+              </div>
+
+              <!-- Card Actions -->
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  (click)="viewDetails(prop.id)"
+                >
+                  View Details
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="addToCompare(prop, $event)"
+                  title="Add to comparison table"
+                >
+                  Compare
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-icon-only edit-btn"
+                  (click)="editProperty(prop.id, $event)"
+                  title="Edit listing"
+                >
+                  &#9998;
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-icon-only delete-btn"
+                  (click)="deleteProperty(prop.id, prop.title, $event)"
+                  title="Delete listing"
+                >
+                  &#128465;
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <div class="empty-state">
+        <div class="empty-state-icon">&#127960;</div>
+        <h3>No Properties Found</h3>
+        <p>No listings are currently available in the system.</p>
+        <a routerLink="/properties/new" class="btn btn-primary">Create Your First Listing</a>
+      </div>
+    }
+  } @else {
+    <!-- Loading State -->
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading real estate listings...</p>
+    </div>
+  }
+</div>

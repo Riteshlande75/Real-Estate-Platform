@@ -1,0 +1,52 @@
+[
+  {
+    "id": "agent-1",
+    "name": "Sarah Jenkins",
+    "email": "sarah.jenkins@realestateplatform.com",
+    "phone": "+91 98201 12345",
+    "city": "Mumbai",
+    "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+    "rating": 4.9,
+    "activeListings": 8
+  },
+  {
+    "id": "agent-2",
+    "name": "Vikramaditya Singhania",
+    "email": "vikram.singhania@realestateplatform.com",
+    "phone": "+91 98450 67890",
+    "city": "Bengaluru",
+    "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80",
+    "rating": 4.8,
+    "activeListings": 12
+  },
+  {
+    "id": "agent-3",
+    "name": "Pooja Deshmukh",
+    "email": "pooja.deshmukh@realestateplatform.com",
+    "phone": "+91 98110 54321",
+    "city": "Pune",
+    "image": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80",
+    "rating": 4.7,
+    "activeListings": 6
+  },
+  {
+    "id": "agent-4",
+    "name": "Rohit Malhotra",
+    "email": "rohit.malhotra@realestateplatform.com",
+    "phone": "+91 98102 98765",
+    "city": "Gurugram",
+    "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80",
+    "rating": 4.9,
+    "activeListings": 9
+  },
+  {
+    "id": "agent-5",
+    "name": "Sneha Reddy",
+    "email": "sneha.reddy@realestateplatform.com",
+    "phone": "+91 98480 34567",
+    "city": "Hyderabad",
+    "image": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=400&q=80",
+    "rating": 4.85,
+    "activeListings": 7
+  }
+]

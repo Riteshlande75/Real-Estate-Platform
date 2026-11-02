@@ -1,0 +1,294 @@
+<div class="property-form-page">
+  <!-- Page Header -->
+  <header class="form-header">
+    <nav class="breadcrumb-nav">
+      <a routerLink="/properties" class="back-link">&#8592; Back to All Properties</a>
+    </nav>
+    <h1 class="form-title">
+      {{ isEditMode ? 'Edit Property Listing' : 'Create New Property Listing' }}
+    </h1>
+    <p class="form-subtitle">
+      {{ isEditMode ? 'Update listing details and real estate specifications.' : 'Fill in the verified specifications to publish a new property.' }}
+    </p>
+  </header>
+
+  <!-- Reactive Form Container -->
+  <div class="form-card">
+    <form [formGroup]="propertyForm" (ngSubmit)="onSubmit()" novalidate>
+      
+      <!-- Basic Details Section -->
+      <section class="form-section">
+        <h2 class="section-heading">Basic Information</h2>
+
+        <div class="form-row">
+          <!-- Title -->
+          <div class="form-group col-12">
+            <label for="title" class="form-label">
+              Property Title <span class="required">*</span>
+            </label>
+            <input
+              id="title"
+              type="text"
+              class="form-control"
+              [class.is-invalid]="isInvalid('title')"
+              formControlName="title"
+              placeholder="e.g. Luxury Sea-Facing 3BHK Residence"
+            />
+            @if (isInvalid('title')) {
+              <div class="error-feedback">
+                Title is required (min 5 characters).
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Property Type -->
+          <div class="form-group col-6">
+            <label for="type" class="form-label">
+              Property Type <span class="required">*</span>
+            </label>
+            <select id="type" class="form-control" formControlName="type">
+              @for (t of propertyTypes; track t) {
+                <option [value]="t">{{ t }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- City -->
+          <div class="form-group col-6">
+            <label for="city" class="form-label">
+              City / Market <span class="required">*</span>
+            </label>
+            <select id="city" class="form-control" formControlName="city">
+              @for (c of cities; track c) {
+                <option [value]="c">{{ c }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Full Address -->
+          <div class="form-group col-12">
+            <label for="address" class="form-label">
+              Complete Address <span class="required">*</span>
+            </label>
+            <input
+              id="address"
+              type="text"
+              class="form-control"
+              [class.is-invalid]="isInvalid('address')"
+              formControlName="address"
+              placeholder="e.g. Worli Sea Face, South Mumbai, Maharashtra 400018"
+            />
+            @if (isInvalid('address')) {
+              <div class="error-feedback">
+                Please enter a valid complete address (min 8 characters).
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- Financial & Dimension Specs -->
+      <section class="form-section">
+        <h2 class="section-heading">Pricing & Space Specifications</h2>
+
+        <div class="form-row">
+          <!-- Price in INR -->
+          <div class="form-group col-6">
+            <label for="price" class="form-label">
+              Price (in INR ₹) <span class="required">*</span>
+            </label>
+            <input
+              id="price"
+              type="number"
+              class="form-control"
+              [class.is-invalid]="isInvalid('price')"
+              formControlName="price"
+              placeholder="e.g. 42500000"
+              min="100000"
+              step="100000"
+            />
+            @if (isInvalid('price')) {
+              <div class="error-feedback">
+                Valid price is required (minimum ₹1,00,000).
+              </div>
+            }
+          </div>
+
+          <!-- Area in Sq Ft -->
+          <div class="form-group col-6">
+            <label for="area" class="form-label">
+              Total Area (Sq Ft) <span class="required">*</span>
+            </label>
+            <input
+              id="area"
+              type="number"
+              class="form-control"
+              [class.is-invalid]="isInvalid('area')"
+              formControlName="area"
+              placeholder="e.g. 2100"
+              min="50"
+            />
+            @if (isInvalid('area')) {
+              <div class="error-feedback">
+                Valid built-up area in sq ft is required.
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Bedrooms -->
+          <div class="form-group col-6">
+            <label for="bedrooms" class="form-label">
+              Bedrooms <span class="required">*</span>
+            </label>
+            <input
+              id="bedrooms"
+              type="number"
+              class="form-control"
+              [class.is-invalid]="isInvalid('bedrooms')"
+              formControlName="bedrooms"
+              min="0"
+              max="25"
+            />
+            @if (isInvalid('bedrooms')) {
+              <div class="error-feedback">
+                Bedrooms count is required (0 for plots/commercial).
+              </div>
+            }
+          </div>
+
+          <!-- Bathrooms -->
+          <div class="form-group col-6">
+            <label for="bathrooms" class="form-label">
+              Bathrooms <span class="required">*</span>
+            </label>
+            <input
+              id="bathrooms"
+              type="number"
+              class="form-control"
+              [class.is-invalid]="isInvalid('bathrooms')"
+              formControlName="bathrooms"
+              min="0"
+              max="25"
+            />
+            @if (isInvalid('bathrooms')) {
+              <div class="error-feedback">
+                Bathrooms count is required.
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- Media & Description -->
+      <section class="form-section">
+        <h2 class="section-heading">Media & Descriptions</h2>
+
+        <div class="form-row">
+          <!-- Description -->
+          <div class="form-group col-12">
+            <label for="description" class="form-label">
+              Detailed Property Description <span class="required">*</span>
+            </label>
+            <textarea
+              id="description"
+              rows="4"
+              class="form-control"
+              [class.is-invalid]="isInvalid('description')"
+              formControlName="description"
+              placeholder="Provide a comprehensive summary of key features, architecture, and highlights..."
+            ></textarea>
+            @if (isInvalid('description')) {
+              <div class="error-feedback">
+                Please enter a detailed description (min 20 characters).
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Image URLs -->
+          <div class="form-group col-12">
+            <label for="imagesText" class="form-label">
+              Image URLs <span class="required">*</span>
+            </label>
+            <textarea
+              id="imagesText"
+              rows="3"
+              class="form-control"
+              [class.is-invalid]="isInvalid('imagesText')"
+              formControlName="imagesText"
+              placeholder="Enter one image URL per line or comma-separated:&#10;https://images.unsplash.com/photo-1&#10;https://images.unsplash.com/photo-2"
+            ></textarea>
+            <span class="field-hint">Supports high-res Unsplash or direct image URLs. First image serves as the card cover.</span>
+            @if (isInvalid('imagesText')) {
+              <div class="error-feedback">
+                At least one valid image URL is required.
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- Amenities Section -->
+      <section class="form-section">
+        <h2 class="section-heading">Amenities & Highlights</h2>
+        <p class="section-subtext">Click to toggle amenities included in this property:</p>
+
+        <div class="amenities-selection-grid">
+          @for (amenity of allAmenities; track amenity) {
+            <button
+              type="button"
+              class="amenity-select-chip"
+              [class.selected]="selectedAmenities.includes(amenity)"
+              (click)="toggleAmenity(amenity)"
+            >
+              <span class="chip-icon">{{ selectedAmenities.includes(amenity) ? '&#10003;' : '+' }}</span>
+              <span>{{ amenity }}</span>
+            </button>
+          }
+        </div>
+      </section>
+
+      <!-- Featured Toggle -->
+      <section class="form-section featured-section">
+        <label class="checkbox-label" for="featured">
+          <input
+            id="featured"
+            type="checkbox"
+            formControlName="featured"
+            class="checkbox-input"
+          />
+          <div class="checkbox-content">
+            <span class="checkbox-title">Mark as Featured Listing</span>
+            <span class="checkbox-desc">Featured properties receive prime spotlight on the homepage and dashboard.</span>
+          </div>
+        </label>
+      </section>
+
+      <!-- Form Actions Footer -->
+      <footer class="form-actions-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isSubmitting"
+        >
+          {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update Listing' : 'Publish Listing') }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>

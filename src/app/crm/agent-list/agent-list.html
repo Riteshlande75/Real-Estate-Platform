@@ -1,0 +1,232 @@
+<div class="agent-list-page">
+  <!-- Toast feedback -->
+  @if (toastMessage) {
+    <div class="toast-notification">
+      {{ toastMessage }}
+    </div>
+  }
+
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Real Estate Agent Directory</h1>
+      <p class="page-subtitle">Verified real estate advisors, asset portfolio consultants, and regional specialists.</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" (click)="openAddModal()">
+        + Register New Agent
+      </button>
+    </div>
+  </header>
+
+  <!-- Search Filter Bar -->
+  <div class="search-filter-bar">
+    <div class="search-box">
+      <span class="search-icon">&#128269;</span>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Filter agents by name, city, or email..."
+        (input)="onSearchInput($any($event.target).value)"
+      />
+    </div>
+  </div>
+
+  <!-- Agents Grid -->
+  @if (filteredAgents$ | async; as agents) {
+    @if (agents.length > 0) {
+      <div class="agents-grid">
+        @for (agent of agents; track agent.id) {
+          <div class="agent-card">
+            <!-- Avatar & Rating -->
+            <div class="card-top">
+              <img
+                [src]="agent.image || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'"
+                [alt]="agent.name"
+                class="agent-avatar"
+                loading="lazy"
+              />
+              <div class="rating-badge">
+                &#9733; {{ agent.rating || '5.0' }}
+              </div>
+            </div>
+
+            <!-- Info -->
+            <div class="card-content">
+              <h2 class="agent-name">{{ agent.name }}</h2>
+              <span class="agent-city-pill">{{ agent.city }}</span>
+
+              <div class="contact-details">
+                <div class="contact-row">
+                  <span class="icon">&#9993;</span>
+                  <a [href]="'mailto:' + agent.email" class="contact-link">{{ agent.email }}</a>
+                </div>
+                <div class="contact-row">
+                  <span class="icon">&#128222;</span>
+                  <a [href]="'tel:' + agent.phone" class="contact-link">{{ agent.phone }}</a>
+                </div>
+              </div>
+
+              <div class="listings-count-box">
+                <span class="count-num">{{ agent.activeListings || 0 }}</span>
+                <span class="count-label">Active Listings Under Care</span>
+              </div>
+
+              <!-- Actions -->
+              <div class="card-footer-actions">
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-sm"
+                  (click)="openEditModal(agent)"
+                >
+                  &#9998; Edit
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger-sm"
+                  (click)="deleteAgent(agent.id, agent.name)"
+                  title="Remove agent"
+                >
+                  &#128465;
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <div class="empty-agents-box">
+        <div class="empty-icon">&#128100;</div>
+        <h3>No Agents Found</h3>
+        <p>No real estate agents matched your search query. Try clearing the search box or register a new agent.</p>
+        <button type="button" class="btn btn-primary" (click)="openAddModal()">
+          Register Agent
+        </button>
+      </div>
+    }
+  }
+
+  <!-- Add / Edit Modal -->
+  @if (showFormModal) {
+    <div class="modal-backdrop" (click)="closeModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2 class="modal-title">
+            {{ editingAgentId ? 'Update Agent Profile' : 'Register New Real Estate Agent' }}
+          </h2>
+          <button type="button" class="close-btn" (click)="closeModal()">&times;</button>
+        </div>
+
+        <form [formGroup]="agentForm" (ngSubmit)="saveAgent()" novalidate>
+          <div class="modal-body">
+            <!-- Full Name -->
+            <div class="form-group">
+              <label for="agentName" class="form-label">Full Name *</label>
+              <input
+                id="agentName"
+                type="text"
+                class="form-control"
+                formControlName="name"
+                placeholder="e.g. Vikramaditya Singhania"
+              />
+              @if (agentForm.get('name')?.invalid && agentForm.get('name')?.touched) {
+                <span class="field-error">Name is required (min 3 chars).</span>
+              }
+            </div>
+
+            <!-- Email & Phone -->
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label for="agentEmail" class="form-label">Email Address *</label>
+                <input
+                  id="agentEmail"
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  placeholder="agent@platform.com"
+                />
+                @if (agentForm.get('email')?.invalid && agentForm.get('email')?.touched) {
+                  <span class="field-error">Valid email is required.</span>
+                }
+              </div>
+
+              <div class="form-group col-6">
+                <label for="agentPhone" class="form-label">Phone Number *</label>
+                <input
+                  id="agentPhone"
+                  type="text"
+                  class="form-control"
+                  formControlName="phone"
+                  placeholder="+91 98450 67890"
+                />
+                @if (agentForm.get('phone')?.invalid && agentForm.get('phone')?.touched) {
+                  <span class="field-error">Phone number is required.</span>
+                }
+              </div>
+            </div>
+
+            <!-- City & Active Listings -->
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label for="agentCity" class="form-label">Regional Market *</label>
+                <select id="agentCity" class="form-control" formControlName="city">
+                  @for (c of cities; track c) {
+                    <option [value]="c">{{ c }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="form-group col-6">
+                <label for="activeListings" class="form-label">Active Listings</label>
+                <input
+                  id="activeListings"
+                  type="number"
+                  class="form-control"
+                  formControlName="activeListings"
+                  min="0"
+                />
+              </div>
+            </div>
+
+            <!-- Rating & Photo URL -->
+            <div class="form-row">
+              <div class="form-group col-4">
+                <label for="agentRating" class="form-label">Rating (1-5)</label>
+                <input
+                  id="agentRating"
+                  type="number"
+                  step="0.1"
+                  min="1"
+                  max="5"
+                  class="form-control"
+                  formControlName="rating"
+                />
+              </div>
+
+              <div class="form-group col-8">
+                <label for="agentImage" class="form-label">Profile Image URL</label>
+                <input
+                  id="agentImage"
+                  type="text"
+                  class="form-control"
+                  formControlName="image"
+                  placeholder="https://images.unsplash.com/photo-..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
+              {{ editingAgentId ? 'Save Changes' : 'Register Agent' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

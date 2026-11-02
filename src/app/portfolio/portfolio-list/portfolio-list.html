@@ -1,0 +1,238 @@
+<div class="portfolio-list-page">
+  <!-- Toast feedback -->
+  @if (toastMessage) {
+    <div class="toast-notification">
+      {{ toastMessage }}
+    </div>
+  }
+
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Investment Portfolio Assets</h1>
+      <p class="page-subtitle">Track acquisition costs, current market valuations, net capital returns, and rental yields.</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" (click)="openAddModal()">
+        + Record Investment
+      </button>
+    </div>
+  </header>
+
+  <!-- Metric Strip Cards -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <span class="metric-title">Total Capital Invested</span>
+      <div class="metric-value">{{ formatPrice((totalInvested$ | async) || 0) }}</div>
+      <span class="metric-hint">Historical acquisition cost</span>
+    </div>
+
+    <div class="metric-card">
+      <span class="metric-title">Current Asset Valuation</span>
+      <div class="metric-value highlight-blue">{{ formatPrice((currentValue$ | async) || 0) }}</div>
+      <span class="metric-hint">Real-time market valuation</span>
+    </div>
+
+    <div class="metric-card">
+      <span class="metric-title">Net Capital Gain / Loss</span>
+      <div
+        class="metric-value"
+        [class.text-gain]="((gainLoss$ | async) || 0) >= 0"
+        [class.text-loss]="((gainLoss$ | async) || 0) < 0"
+      >
+        {{ ((gainLoss$ | async) || 0) >= 0 ? '+' : '' }}{{ formatPrice((gainLoss$ | async) || 0) }}
+        <span class="gain-percent">({{ ((gainLoss$ | async) || 0) >= 0 ? '+' : '' }}{{ gainLossPercent$ | async }}%)</span>
+      </div>
+      <span class="metric-hint">Unrealized capital returns</span>
+    </div>
+
+    <div class="metric-card">
+      <span class="metric-title">Monthly Rental Yield</span>
+      <div class="metric-value text-gain">{{ formatPrice((totalMonthlyRent$ | async) || 0) }} / mo</div>
+      <span class="metric-hint">Gross monthly cash inflow</span>
+    </div>
+  </div>
+
+  <!-- Investments Table -->
+  @if (investments$ | async; as investments) {
+    @if (investments.length > 0) {
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="investments-table">
+            <thead>
+              <tr>
+                <th>Property Asset</th>
+                <th>Location</th>
+                <th>Purchase Cost</th>
+                <th>Current Valuation</th>
+                <th>Monthly Rental</th>
+                <th>Unrealized Gain / Loss</th>
+                <th>Acquired</th>
+                <th class="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (inv of investments; track inv.id) {
+                <tr>
+                  <td>
+                    <span class="property-title-cell">{{ inv.propertyTitle }}</span>
+                  </td>
+                  <td>
+                    <span class="city-pill">{{ inv.city }}</span>
+                  </td>
+                  <td>
+                    <span class="font-mono">{{ formatPrice(inv.purchasePrice) }}</span>
+                  </td>
+                  <td>
+                    <span class="font-mono font-bold">{{ formatPrice(inv.currentValue) }}</span>
+                  </td>
+                  <td>
+                    <span class="font-mono text-gain">{{ formatPrice(inv.monthlyRent) }}</span>
+                  </td>
+                  <td>
+                    <span
+                      class="gain-cell"
+                      [class.text-gain]="getGain(inv) >= 0"
+                      [class.text-loss]="getGain(inv) < 0"
+                    >
+                      {{ getGain(inv) >= 0 ? '+' : '' }}{{ formatPrice(getGain(inv)) }}
+                      <small>({{ getGain(inv) >= 0 ? '+' : '' }}{{ getGainPercent(inv) }}%)</small>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="date-text">{{ inv.purchaseDate }}</span>
+                  </td>
+                  <td class="text-right">
+                    <button
+                      type="button"
+                      class="btn-delete"
+                      (click)="deleteInvestment(inv.id, inv.propertyTitle)"
+                      title="Remove from portfolio"
+                    >
+                      &#128465;
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <div class="empty-portfolio-box">
+        <div class="empty-icon">&#128200;</div>
+        <h3>No Portfolio Assets Tracked</h3>
+        <p>You haven't added any property investment assets yet. Click "Record Investment" or browse listings to add properties.</p>
+        <button type="button" class="btn btn-primary" (click)="openAddModal()">
+          Record Your First Investment
+        </button>
+      </div>
+    }
+  }
+
+  <!-- Add Investment Modal -->
+  @if (showAddModal) {
+    <div class="modal-backdrop" (click)="closeModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2 class="modal-title">Record Portfolio Asset</h2>
+          <button type="button" class="close-btn" (click)="closeModal()">&times;</button>
+        </div>
+
+        <form [formGroup]="investmentForm" (ngSubmit)="saveInvestment()" novalidate>
+          <div class="modal-body">
+            <!-- Property Title -->
+            <div class="form-group">
+              <label for="invTitle" class="form-label">Property Asset Title *</label>
+              <input
+                id="invTitle"
+                type="text"
+                class="form-control"
+                formControlName="propertyTitle"
+                placeholder="e.g. 3BHK Residence, Worli"
+              />
+              @if (investmentForm.get('propertyTitle')?.invalid && investmentForm.get('propertyTitle')?.touched) {
+                <span class="field-error">Title is required.</span>
+              }
+            </div>
+
+            <!-- City & Purchase Date -->
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label for="invCity" class="form-label">City *</label>
+                <select id="invCity" class="form-control" formControlName="city">
+                  @for (c of cities; track c) {
+                    <option [value]="c">{{ c }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="form-group col-6">
+                <label for="invDate" class="form-label">Acquisition Date *</label>
+                <input
+                  id="invDate"
+                  type="date"
+                  class="form-control"
+                  formControlName="purchaseDate"
+                />
+              </div>
+            </div>
+
+            <!-- Purchase Price & Current Valuation -->
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label for="buyPrice" class="form-label">Purchase Price (₹ INR) *</label>
+                <input
+                  id="buyPrice"
+                  type="number"
+                  class="form-control"
+                  formControlName="purchasePrice"
+                  step="100000"
+                />
+                @if (investmentForm.get('purchasePrice')?.invalid && investmentForm.get('purchasePrice')?.touched) {
+                  <span class="field-error">Valid purchase price required.</span>
+                }
+              </div>
+
+              <div class="form-group col-6">
+                <label for="currVal" class="form-label">Current Value (₹ INR) *</label>
+                <input
+                  id="currVal"
+                  type="number"
+                  class="form-control"
+                  formControlName="currentValue"
+                  step="100000"
+                />
+                @if (investmentForm.get('currentValue')?.invalid && investmentForm.get('currentValue')?.touched) {
+                  <span class="field-error">Valid current value required.</span>
+                }
+              </div>
+            </div>
+
+            <!-- Monthly Rent -->
+            <div class="form-group">
+              <label for="monthlyRent" class="form-label">Monthly Rental Inflow (₹ INR) *</label>
+              <input
+                id="monthlyRent"
+                type="number"
+                class="form-control"
+                formControlName="monthlyRent"
+                step="5000"
+              />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Save Investment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

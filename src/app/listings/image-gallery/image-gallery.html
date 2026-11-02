@@ -1,0 +1,60 @@
+<div class="gallery-container">
+  @if (images && images.length > 0) {
+    <!-- Main Large Display Area -->
+    <div class="main-image-wrapper">
+      <img
+        [src]="currentImage"
+        alt="Property image preview"
+        class="main-image"
+        loading="lazy"
+      />
+
+      <!-- Navigation arrows (shown when multiple images exist) -->
+      @if (images.length > 1) {
+        <button
+          type="button"
+          class="nav-btn prev-btn"
+          (click)="previous()"
+          aria-label="Previous image"
+        >
+          &#10094;
+        </button>
+        <button
+          type="button"
+          class="nav-btn next-btn"
+          (click)="next()"
+          aria-label="Next image"
+        >
+          &#10095;
+        </button>
+
+        <span class="image-badge">
+          {{ selectedIndex + 1 }} / {{ images.length }}
+        </span>
+      }
+    </div>
+
+    <!-- Thumbnail Strip -->
+    @if (images.length > 1) {
+      <div class="thumbnail-strip">
+        @for (img of images; track $index; let idx = $index) {
+          <button
+            type="button"
+            class="thumbnail-btn"
+            [class.active]="idx === selectedIndex"
+            (click)="selectImage(idx)"
+            [attr.aria-label]="'View photo ' + (idx + 1)"
+          >
+            <img [src]="img" alt="Thumbnail" class="thumbnail-img" />
+          </button>
+        }
+      </div>
+    }
+  } @else {
+    <!-- Empty State Placeholder -->
+    <div class="empty-gallery">
+      <div class="empty-icon">&#127968;</div>
+      <p class="empty-text">No images uploaded for this property</p>
+    </div>
+  }
+</div>

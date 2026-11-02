@@ -1,0 +1,157 @@
+<div class="property-detail-page">
+  <!-- Toast feedback -->
+  @if (toastMessage) {
+    <div class="toast-notification">
+      {{ toastMessage }}
+    </div>
+  }
+
+  @if (property$ | async; as property) {
+    <!-- Navigation Breadcrumbs -->
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a routerLink="/properties" class="back-link">&#8592; Back to All Listings</a>
+      <span class="crumb-divider">/</span>
+      <span class="current-crumb">{{ property.title }}</span>
+    </nav>
+
+    <!-- Header Title & Price Banner -->
+    <div class="property-header">
+      <div class="header-main">
+        <div class="tag-row">
+          <span class="property-type-pill">{{ property.type }}</span>
+          @if (property.featured) {
+            <span class="featured-pill">&#9733; Featured Collection</span>
+          }
+        </div>
+        <h1 class="detail-title">{{ property.title }}</h1>
+        <p class="detail-address">
+          <span class="pin-icon">&#128205;</span> {{ property.address }}
+        </p>
+      </div>
+
+      <div class="header-pricing">
+        <span class="price-label">Price</span>
+        <div class="price-value">{{ formatPrice(property.price) }}</div>
+        <span class="price-rate">₹{{ property.pricePerSqFt }} / sq ft</span>
+      </div>
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="detail-layout">
+      <!-- Left Column: Gallery & Details -->
+      <section class="main-column">
+        <!-- Interactive Image Gallery -->
+        <div class="section-card gallery-card">
+          <app-image-gallery [images]="property.images"></app-image-gallery>
+        </div>
+
+        <!-- Key Features Bar -->
+        <div class="section-card specs-card">
+          <div class="spec-grid">
+            <div class="spec-item">
+              <span class="spec-icon">&#128716;</span>
+              <div class="spec-info">
+                <span class="spec-val">{{ property.bedrooms > 0 ? property.bedrooms : 'N/A' }}</span>
+                <span class="spec-label">Bedrooms</span>
+              </div>
+            </div>
+
+            <div class="spec-item">
+              <span class="spec-icon">&#128703;</span>
+              <div class="spec-info">
+                <span class="spec-val">{{ property.bathrooms > 0 ? property.bathrooms : 'N/A' }}</span>
+                <span class="spec-label">Bathrooms</span>
+              </div>
+            </div>
+
+            <div class="spec-item">
+              <span class="spec-icon">&#128208;</span>
+              <div class="spec-info">
+                <span class="spec-val">{{ property.area }}</span>
+                <span class="spec-label">Sq Ft Area</span>
+              </div>
+            </div>
+
+            <div class="spec-item">
+              <span class="spec-icon">&#127970;</span>
+              <div class="spec-info">
+                <span class="spec-val">{{ property.type }}</span>
+                <span class="spec-label">Property Type</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="section-card">
+          <h2 class="section-title">Property Overview</h2>
+          <p class="description-text">{{ property.description }}</p>
+        </div>
+
+        <!-- Amenities Section -->
+        @if (property.amenities && property.amenities.length > 0) {
+          <div class="section-card">
+            <h2 class="section-title">Amenities & Features</h2>
+            <div class="amenities-grid">
+              @for (amenity of property.amenities; track amenity) {
+                <div class="amenity-chip">
+                  <span class="check-icon">&#10003;</span>
+                  <span>{{ amenity }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </section>
+
+      <!-- Right Column: Actions & Direct Enquiry -->
+      <aside class="sidebar-column">
+        <!-- Action Hub Card -->
+        <div class="action-card">
+          <h3 class="action-card-title">Investor & Buyer Actions</h3>
+          <p class="action-card-subtitle">Perform instant multi-property comparison or track this asset in your portfolio.</p>
+
+          <div class="action-btn-group">
+            <button
+              type="button"
+              class="btn btn-compare"
+              (click)="addToCompare(property)"
+            >
+              <span class="icon">&#9878;</span> Add to Compare
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-portfolio"
+              (click)="addToPortfolio(property)"
+            >
+              <span class="icon">&#128200;</span> Add to Portfolio
+            </button>
+
+            <a
+              [routerLink]="['/properties', property.id, 'edit']"
+              class="btn btn-edit"
+            >
+              <span class="icon">&#9998;</span> Edit Listing
+            </a>
+          </div>
+        </div>
+
+        <!-- Embedded Enquiry Component -->
+        <div class="enquiry-card-wrapper">
+          <app-enquiry-form [propertyId]="property.id"></app-enquiry-form>
+        </div>
+      </aside>
+    </div>
+  } @else {
+    <!-- Not Found / Loading State -->
+    <div class="not-found-state">
+      <div class="not-found-icon">&#128269;</div>
+      <h2>Property Not Found</h2>
+      <p>The listing you requested does not exist or may have been removed.</p>
+      <button type="button" class="btn btn-primary" (click)="goBack()">
+        Back to Property Listings
+      </button>
+    </div>
+  }
+</div>

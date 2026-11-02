@@ -1,0 +1,132 @@
+<div class="enquiry-list-page">
+  <!-- Toast feedback -->
+  @if (toastMessage) {
+    <div class="toast-notification">
+      {{ toastMessage }}
+    </div>
+  }
+
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Lead & Property Inquiries</h1>
+      <p class="page-subtitle">Track incoming investor enquiries, follow-up statuses, and viewing schedules.</p>
+    </div>
+  </header>
+
+  <!-- Filter Status Tabs -->
+  <div class="status-tabs-row">
+    @for (status of statusOptions; track status) {
+      <button
+        type="button"
+        class="tab-btn"
+        [class.active]="(activeStatus$ | async) === status"
+        (click)="setStatusFilter(status)"
+      >
+        {{ status }}
+      </button>
+    }
+  </div>
+
+  <!-- Inquiries Table -->
+  @if (filteredEnquiries$ | async; as enquiries) {
+    @if (enquiries.length > 0) {
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="enquiry-table">
+            <thead>
+              <tr>
+                <th>Client Name</th>
+                <th>Contact</th>
+                <th>Property Reference</th>
+                <th>Inquiry Message</th>
+                <th>Date</th>
+                <th>Workflow Status</th>
+                <th class="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (enq of enquiries; track enq.id) {
+                <tr>
+                  <!-- Client Name -->
+                  <td>
+                    <span class="client-name">{{ enq.clientName }}</span>
+                  </td>
+
+                  <!-- Contact -->
+                  <td>
+                    <div class="contact-stack">
+                      <span class="contact-email">{{ enq.clientEmail }}</span>
+                      <span class="contact-phone">{{ enq.clientPhone }}</span>
+                    </div>
+                  </td>
+
+                  <!-- Property Ref -->
+                  <td>
+                    @if (enq.propertyId && enq.propertyId !== 'general') {
+                      <a [routerLink]="['/properties', enq.propertyId]" class="property-link">
+                        {{ enq.propertyTitle || 'Property #' + enq.propertyId }}
+                      </a>
+                    } @else {
+                      <span class="general-ref">General Advisory</span>
+                    }
+                  </td>
+
+                  <!-- Message -->
+                  <td>
+                    <div class="message-text" [title]="enq.message">
+                      {{ enq.message }}
+                    </div>
+                  </td>
+
+                  <!-- Date -->
+                  <td>
+                    <span class="date-text">{{ formatDate(enq.date) }}</span>
+                  </td>
+
+                  <!-- Status Select -->
+                  <td>
+                    <select
+                      class="status-select"
+                      [class.status-new]="enq.status === 'New'"
+                      [class.status-progress]="enq.status === 'In Progress'"
+                      [class.status-closed]="enq.status === 'Closed'"
+                      [value]="enq.status"
+                      (change)="onStatusChange(enq.id, $any($event.target).value)"
+                    >
+                      <option value="New">New</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                  </td>
+
+                  <!-- Delete -->
+                  <td class="text-right">
+                    <button
+                      type="button"
+                      class="delete-btn"
+                      (click)="deleteEnquiry(enq.id)"
+                      title="Delete enquiry"
+                    >
+                      &#128465;
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <div class="empty-enquiries-box">
+        <div class="empty-icon">&#128233;</div>
+        <h3>No Enquiries in this Category</h3>
+        <p>No enquiries found with status "{{ activeStatus$ | async }}". Select "All" to view all records.</p>
+        <button type="button" class="btn btn-outline" (click)="setStatusFilter('All')">
+          View All Enquiries
+        </button>
+      </div>
+    }
+  }
+</div>

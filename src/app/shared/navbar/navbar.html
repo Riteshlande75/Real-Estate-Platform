@@ -1,0 +1,230 @@
+<header class="navbar-wrapper">
+  <div class="navbar-container">
+    <!-- Brand / Logo -->
+    <a routerLink="/properties" class="brand-logo" (click)="closeMobileMenu()">
+      <div class="brand-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">PropVantage</span>
+        <span class="brand-badge">Group 8</span>
+      </div>
+    </a>
+
+    <!-- Desktop Navigation Links -->
+    <nav class="desktop-nav">
+      <a routerLink="/properties" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+        Properties
+      </a>
+
+      <a routerLink="/search" routerLinkActive="active" class="nav-link">
+        Search
+      </a>
+
+      <a routerLink="/compare" routerLinkActive="active" class="nav-link compare-link">
+        <span>Compare</span>
+        @if ((compareCount$ | async); as count) {
+          @if (count > 0) {
+            <span class="badge badge-accent">{{ count }}</span>
+          }
+        }
+      </a>
+
+      <!-- Portfolio Dropdown -->
+      <div class="dropdown-wrapper">
+        <button
+          type="button"
+          class="dropdown-trigger"
+          [class.active]="activeDropdown === 'portfolio'"
+          (click)="toggleDropdown('portfolio')"
+        >
+          <span>Portfolio</span>
+          <svg class="chevron-icon" [class.rotated]="activeDropdown === 'portfolio'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        @if (activeDropdown === 'portfolio') {
+          <div class="dropdown-menu">
+            <a routerLink="/portfolio/dashboard" routerLinkActive="active-sub" (click)="closeDropdown()" class="dropdown-item">
+              <strong>Dashboard</strong>
+              <small>Overview & Key Charts</small>
+            </a>
+            <a routerLink="/portfolio/investments" routerLinkActive="active-sub" (click)="closeDropdown()" class="dropdown-item">
+              <strong>Investments</strong>
+              <small>Track Assets & Performance</small>
+            </a>
+            <a routerLink="/portfolio/trends" routerLinkActive="active-sub" (click)="closeDropdown()" class="dropdown-item">
+              <strong>Market Trends</strong>
+              <small>Price/Sq Ft City Analysis</small>
+            </a>
+            <a routerLink="/portfolio/roi-calculator" routerLinkActive="active-sub" (click)="closeDropdown()" class="dropdown-item">
+              <strong>ROI Calculator</strong>
+              <small>Yield & Net Gain Estimation</small>
+            </a>
+          </div>
+        }
+      </div>
+
+      <!-- CRM Dropdown -->
+      <div class="dropdown-wrapper">
+        <button
+          type="button"
+          class="dropdown-trigger"
+          [class.active]="activeDropdown === 'crm'"
+          (click)="toggleDropdown('crm')"
+        >
+          <span>CRM</span>
+          <svg class="chevron-icon" [class.rotated]="activeDropdown === 'crm'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        @if (activeDropdown === 'crm') {
+          <div class="dropdown-menu">
+            <a routerLink="/crm/agents" routerLinkActive="active-sub" (click)="closeDropdown()" class="dropdown-item">
+              <strong>Agents</strong>
+              <small>Agent Directory & Contacts</small>
+            </a>
+            <a routerLink="/crm/clients" routerLinkActive="active-sub" (click)="closeDropdown()" class="dropdown-item">
+              <strong>Clients</strong>
+              <small>Client Records & Budgets</small>
+            </a>
+            <a routerLink="/crm/enquiries" routerLinkActive="active-sub" (click)="closeDropdown()" class="dropdown-item">
+              <strong>Enquiries</strong>
+              <small>Inquiries & Leads Workflow</small>
+            </a>
+          </div>
+        }
+      </div>
+    </nav>
+
+    <!-- Desktop User Actions (Right) -->
+    <div class="desktop-actions">
+      @if (isLoggedIn$ | async) {
+        <a routerLink="/properties/new" class="btn btn-add-prop">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Add Property</span>
+        </a>
+
+        @if (currentUser$ | async; as user) {
+          <div class="user-chip">
+            <div class="user-avatar">{{ user.name.charAt(0).toUpperCase() }}</div>
+            <div class="user-info">
+              <span class="user-name">{{ user.name }}</span>
+              <span class="user-role">{{ user.role }}</span>
+            </div>
+          </div>
+        }
+
+        <button type="button" class="btn btn-outline" (click)="logout()">
+          Logout
+        </button>
+      } @else {
+        <a routerLink="/login" class="btn btn-primary">
+          Login
+        </a>
+      }
+    </div>
+
+    <!-- Mobile Menu Toggle Button -->
+    <button
+      type="button"
+      class="mobile-toggle-btn"
+      (click)="toggleMobileMenu()"
+      [attr.aria-expanded]="isMobileMenuOpen"
+      aria-label="Toggle navigation menu"
+    >
+      @if (isMobileMenuOpen) {
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      } @else {
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      }
+    </button>
+  </div>
+
+  <!-- Mobile Collapsible Menu -->
+  @if (isMobileMenuOpen) {
+    <div class="mobile-drawer">
+      <div class="mobile-links">
+        <a routerLink="/properties" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-link">
+          Properties
+        </a>
+        <a routerLink="/search" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-link">
+          Search Listings
+        </a>
+        <a routerLink="/compare" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-link compare-mobile">
+          <span>Compare Properties</span>
+          @if ((compareCount$ | async); as count) {
+            @if (count > 0) {
+              <span class="badge badge-accent">{{ count }}</span>
+            }
+          }
+        </a>
+
+        <div class="mobile-divider"></div>
+        <div class="mobile-section-header">Portfolio</div>
+        <a routerLink="/portfolio/dashboard" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-sublink">
+          Dashboard
+        </a>
+        <a routerLink="/portfolio/investments" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-sublink">
+          Investments
+        </a>
+        <a routerLink="/portfolio/trends" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-sublink">
+          Market Trends
+        </a>
+        <a routerLink="/portfolio/roi-calculator" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-sublink">
+          ROI Calculator
+        </a>
+
+        <div class="mobile-divider"></div>
+        <div class="mobile-section-header">CRM & Management</div>
+        <a routerLink="/crm/agents" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-sublink">
+          Agents Directory
+        </a>
+        <a routerLink="/crm/clients" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-sublink">
+          Clients
+        </a>
+        <a routerLink="/crm/enquiries" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-sublink">
+          Customer Enquiries
+        </a>
+
+        <div class="mobile-divider"></div>
+
+        <div class="mobile-actions">
+          @if (isLoggedIn$ | async) {
+            @if (currentUser$ | async; as user) {
+              <div class="mobile-user-info">
+                <strong>{{ user.name }}</strong>
+                <span>{{ user.role }} ({{ user.username }})</span>
+              </div>
+            }
+            <a routerLink="/properties/new" (click)="closeMobileMenu()" class="btn btn-add-prop mobile-btn">
+              + Add Property
+            </a>
+            <button type="button" class="btn btn-outline mobile-btn" (click)="logout()">
+              Logout
+            </button>
+          } @else {
+            <a routerLink="/login" (click)="closeMobileMenu()" class="btn btn-primary mobile-btn">
+              Login to Portal
+            </a>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</header>

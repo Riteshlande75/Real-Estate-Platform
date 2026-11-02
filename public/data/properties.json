@@ -1,0 +1,300 @@
+[
+  {
+    "id": "prop-101",
+    "title": "Luxury Sea-Facing 3BHK Residence",
+    "description": "An opulent 3 BHK sea-view apartment featuring premium Italian marble flooring, expansive balconies, modular kitchen, and smart home automation in prime Worli.",
+    "price": 42500000,
+    "type": "Apartment",
+    "city": "Mumbai",
+    "address": "Worli Sea Face, South Mumbai, Maharashtra 400018",
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "area": 2100,
+    "pricePerSqFt": 20238,
+    "amenities": ["Sea View", "Swimming Pool", "Gymnasium", "Clubhouse", "24/7 Security", "Covered Parking", "Power Backup"],
+    "images": [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": true,
+    "createdAt": "2026-01-15T10:00:00.000Z",
+    "agentId": "agent-1"
+  },
+  {
+    "id": "prop-102",
+    "title": "Contemporary Gated Villa with Private Pool",
+    "description": "Stunning 4 BHK private villa in Whitefield with lush landscaped gardens, private swimming pool, home theater room, and EV charging station.",
+    "price": 32000000,
+    "type": "Villa",
+    "city": "Bengaluru",
+    "address": "EPIP Zone, Whitefield, Bengaluru, Karnataka 560066",
+    "bedrooms": 4,
+    "bathrooms": 5,
+    "area": 3800,
+    "pricePerSqFt": 8421,
+    "amenities": ["Private Pool", "Private Garden", "Home Automation", "Solar Power", "Clubhouse", "Tennis Court", "EV Charging"],
+    "images": [
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": true,
+    "createdAt": "2026-01-20T11:30:00.000Z",
+    "agentId": "agent-2"
+  },
+  {
+    "id": "prop-103",
+    "title": "Skyline View Penthouse on Golf Course Road",
+    "description": "Ultra-luxurious duplex penthouse offering panoramic skyline views, double-height ceiling living room, jacuzzi on terrace, and concierge services.",
+    "price": 58000000,
+    "type": "Penthouse",
+    "city": "Gurugram",
+    "address": "Sector 54, Golf Course Road, Gurugram, Haryana 122002",
+    "bedrooms": 4,
+    "bathrooms": 5,
+    "area": 4600,
+    "pricePerSqFt": 12608,
+    "amenities": ["Terrace Jacuzzi", "Concierge Desk", "Golf Course View", "Private Elevator", "Valet Parking", "Spa"],
+    "images": [
+      "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1502005229762-ee152da915d6?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": false,
+    "createdAt": "2026-02-05T09:15:00.000Z",
+    "agentId": "agent-4"
+  },
+  {
+    "id": "prop-104",
+    "title": "Smart 2BHK Urban Apartment",
+    "description": "Modern compact 2 BHK apartment ideal for tech professionals and investors. High rental yield zone, close to IT parks and metro station.",
+    "price": 9500000,
+    "type": "Apartment",
+    "city": "Pune",
+    "address": "Hinjawadi Phase 1, Pune, Maharashtra 411057",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "area": 1050,
+    "pricePerSqFt": 9047,
+    "amenities": ["Gymnasium", "Co-working Space", "High Speed Lifts", "CCTV Surveillance", "Badminton Court"],
+    "images": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": false,
+    "createdAt": "2026-02-10T14:20:00.000Z",
+    "agentId": "agent-3"
+  },
+  {
+    "id": "prop-105",
+    "title": "Prime Commercial Office Space",
+    "description": "Grade-A pre-leased commercial office floor in HITEC City with guaranteed corporate lease, 8.5% cap rate, and premium tenant profile.",
+    "price": 28000000,
+    "type": "Commercial",
+    "city": "Hyderabad",
+    "address": "HITEC City Phase 2, Madhapur, Hyderabad, Telangana 500081",
+    "bedrooms": 0,
+    "bathrooms": 4,
+    "area": 2500,
+    "pricePerSqFt": 11200,
+    "amenities": ["Central AC", "Cafeteria", "Conference Rooms", "Fire Safety System", "Fiber Internet", "24/7 Access"],
+    "images": [
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": true,
+    "createdAt": "2026-02-14T16:00:00.000Z",
+    "agentId": "agent-5"
+  },
+  {
+    "id": "prop-106",
+    "title": "Residential Villa Plot in Gated Community",
+    "description": "Clear-title residential corner plot ready for construction with DTCP approval, wide asphalt roads, underground cabling, and landscaped avenues.",
+    "price": 7500000,
+    "type": "Plot",
+    "city": "Bengaluru",
+    "address": "Sarjapur Road, East Bengaluru, Karnataka 562125",
+    "bedrooms": 0,
+    "bathrooms": 0,
+    "area": 2400,
+    "pricePerSqFt": 3125,
+    "amenities": ["Gated Community", "Water Connection", "Underground Electricity", "Avenue Plantation", "24/7 Security"],
+    "images": [
+      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": false,
+    "createdAt": "2026-02-18T08:45:00.000Z",
+    "agentId": "agent-2"
+  },
+  {
+    "id": "prop-107",
+    "title": "Bespoke 3BHK Lakeview Residence",
+    "description": "Vastu-compliant luxury 3 BHK overlooking Durgam Cheruvu lake. Includes Italian kitchen, home automation, double car parking, and infinity pool access.",
+    "price": 18200000,
+    "type": "Apartment",
+    "city": "Hyderabad",
+    "address": "Financial District, Gachibowli, Hyderabad, Telangana 500032",
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "area": 1950,
+    "pricePerSqFt": 9333,
+    "amenities": ["Lake View", "Infinity Pool", "Squash Court", "Gymnasium", "Kids Play Area", "EV Charging"],
+    "images": [
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": true,
+    "createdAt": "2026-02-19T10:15:00.000Z",
+    "agentId": "agent-5"
+  },
+  {
+    "id": "prop-108",
+    "title": "Mediterranean Luxury Villa",
+    "description": "Spanish-inspired Mediterranean villa nestled in leafy Koregaon Park with private landscaped patio, gazebo, designer modular kitchen, and servant quarters.",
+    "price": 26500000,
+    "type": "Villa",
+    "city": "Pune",
+    "address": "Lane 5, Koregaon Park, Pune, Maharashtra 411001",
+    "bedrooms": 4,
+    "bathrooms": 4,
+    "area": 3200,
+    "pricePerSqFt": 8281,
+    "amenities": ["Private Patio", "Gazebo", "Solar Water Heating", "Clubhouse", "24/7 Security", "Private Lawn"],
+    "images": [
+      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": false,
+    "createdAt": "2026-02-20T12:00:00.000Z",
+    "agentId": "agent-3"
+  },
+  {
+    "id": "prop-109",
+    "title": "Tech-Park Facing Grade-A IT Office",
+    "description": "Ready-to-occupy fully furnished corporate workspace on ORR with 60 workstations, 3 executive cabins, conference suite, and cafeteria.",
+    "price": 34000000,
+    "type": "Commercial",
+    "city": "Bengaluru",
+    "address": "Outer Ring Road, Bellandur, Bengaluru, Karnataka 560103",
+    "bedrooms": 0,
+    "bathrooms": 3,
+    "area": 3100,
+    "pricePerSqFt": 10967,
+    "amenities": ["100% DG Backup", "Biometric Access", "High Speed Elevators", "Multi-tier Security", "Cafeteria"],
+    "images": [
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": false,
+    "createdAt": "2026-02-21T15:30:00.000Z",
+    "agentId": "agent-2"
+  },
+  {
+    "id": "prop-110",
+    "title": "Premium Corner Residential Plot",
+    "city": "Hyderabad",
+    "description": "East-facing HMDA-approved premium villa plot located in high-growth Kokapet corridor, minutes from Neopolis and Financial District.",
+    "price": 12000000,
+    "type": "Plot",
+    "address": "Golden Mile Road, Kokapet, Hyderabad, Telangana 500075",
+    "bedrooms": 0,
+    "bathrooms": 0,
+    "area": 3000,
+    "pricePerSqFt": 4000,
+    "amenities": ["HMDA Approved", "60ft Wide Road", "Underground Drainage", "Clubhouse Membership", "Avenue Lighting"],
+    "images": [
+      "https://images.unsplash.com/photo-1524813686514-a57563d77d66?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": false,
+    "createdAt": "2026-02-22T09:40:00.000Z",
+    "agentId": "agent-5"
+  },
+  {
+    "id": "prop-111",
+    "title": "Coastal High-Rise Penthouse",
+    "description": "Magnificent top-floor residence with 360-degree Arabian Sea views, private plunge pool, wrap-around terrace deck, and private lift access.",
+    "price": 72000000,
+    "type": "Penthouse",
+    "city": "Mumbai",
+    "address": "Carter Road, Bandra West, Mumbai, Maharashtra 400050",
+    "bedrooms": 5,
+    "bathrooms": 6,
+    "area": 5200,
+    "pricePerSqFt": 13846,
+    "amenities": ["Panoramic Sea View", "Private Plunge Pool", "Dedicated Concierge", "Private Elevator", "4 Car Parking", "Spa"],
+    "images": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": true,
+    "createdAt": "2026-02-23T11:20:00.000Z",
+    "agentId": "agent-1"
+  },
+  {
+    "id": "prop-112",
+    "title": "Elegant 2BHK Garden Apartment",
+    "description": "Charming ground-floor apartment with attached private garden lawn in tranquil Indiranagar. Walking distance to Metro, boutique cafes, and parks.",
+    "price": 14500000,
+    "type": "Apartment",
+    "city": "Bengaluru",
+    "address": "12th Main, Indiranagar, Bengaluru, Karnataka 560038",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "area": 1280,
+    "pricePerSqFt": 11328,
+    "amenities": ["Private Garden", "Covered Parking", "Piped Gas", "Security Intercom", "Rooftop Terrace"],
+    "images": [
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": false,
+    "createdAt": "2026-02-24T14:10:00.000Z",
+    "agentId": "agent-2"
+  },
+  {
+    "id": "prop-113",
+    "title": "Boutique Co-working Commercial Floor",
+    "description": "Premium boutique office premises situated near Pune International Airport, with flexible partitioning, acoustic conference booths, and pantry.",
+    "price": 21000000,
+    "type": "Commercial",
+    "city": "Pune",
+    "address": "Symbiosis Road, Viman Nagar, Pune, Maharashtra 411014",
+    "bedrooms": 0,
+    "bathrooms": 2,
+    "area": 2200,
+    "pricePerSqFt": 9545,
+    "amenities": ["Central Air Conditioning", "Cafeteria", "Acoustic Phone Booths", "Reserved Parking", "High Speed WiFi"],
+    "images": [
+      "https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": false,
+    "createdAt": "2026-02-25T16:45:00.000Z",
+    "agentId": "agent-3"
+  },
+  {
+    "id": "prop-114",
+    "title": "Royal Heritage Villa with Courtyard",
+    "description": "Traditional Konkani-Portuguese architecture blended with modern luxury: central open courtyard, private pool, teakwood finishes, and fruit orchard.",
+    "price": 48000000,
+    "type": "Villa",
+    "city": "Mumbai",
+    "address": "Mandwa Jetty Road, Alibaug / South Mumbai Coastal, Maharashtra 402201",
+    "bedrooms": 4,
+    "bathrooms": 5,
+    "area": 4500,
+    "pricePerSqFt": 10666,
+    "amenities": ["Private Pool", "Traditional Courtyard", "Orchard Garden", "Staff Quarters", "Gazebo", "Solar Panels"],
+    "images": [
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": true,
+    "createdAt": "2026-02-26T09:30:00.000Z",
+    "agentId": "agent-1"
+  }
+]

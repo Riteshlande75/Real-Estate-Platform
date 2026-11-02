@@ -1,0 +1,178 @@
+<div class="calculator-container">
+  <!-- Page Header -->
+  <header class="calculator-header">
+    <h1 class="page-title">Real Estate Investment ROI Calculator</h1>
+    <p class="page-subtitle">Project gross rental yields, net operating income, capital growth, and cumulative ROI.</p>
+
+    <!-- Quick Scenario Presets -->
+    <div class="presets-row">
+      <span class="preset-label">Quick Scenarios:</span>
+      <button type="button" class="preset-btn" (click)="loadPreset('residential')">
+        2BHK City Apartment
+      </button>
+      <button type="button" class="preset-btn" (click)="loadPreset('commercial')">
+        Grade-A Commercial Space
+      </button>
+      <button type="button" class="preset-btn" (click)="loadPreset('luxury')">
+        Luxury Sea-View Residence
+      </button>
+    </div>
+  </header>
+
+  <div class="calculator-layout">
+    <!-- Left: Inputs Form -->
+    <div class="calculator-card inputs-card">
+      <h2 class="card-heading">Investment Parameters</h2>
+
+      <form [formGroup]="roiForm" novalidate>
+        <!-- Purchase Price -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="calcPurchase" class="form-label">Purchase Price (₹ INR)</label>
+            <span class="live-val">{{ formatPrice(roiForm.get('purchasePrice')?.value || 0) }}</span>
+          </div>
+          <input
+            id="calcPurchase"
+            type="number"
+            class="form-control"
+            formControlName="purchasePrice"
+            step="100000"
+          />
+        </div>
+
+        <!-- Current / Projected Valuation -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="calcValuation" class="form-label">Current / Future Valuation (₹ INR)</label>
+            <span class="live-val">{{ formatPrice(roiForm.get('currentValue')?.value || 0) }}</span>
+          </div>
+          <input
+            id="calcValuation"
+            type="number"
+            class="form-control"
+            formControlName="currentValue"
+            step="100000"
+          />
+        </div>
+
+        <!-- Monthly Rent -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="calcRent" class="form-label">Monthly Expected Rent (₹ INR)</label>
+            <span class="live-val text-green">{{ formatPrice(roiForm.get('monthlyRent')?.value || 0) }} / mo</span>
+          </div>
+          <input
+            id="calcRent"
+            type="number"
+            class="form-control"
+            formControlName="monthlyRent"
+            step="2000"
+          />
+        </div>
+
+        <!-- Annual Expenses -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="calcExpenses" class="form-label">Annual Expenses (Taxes, HOA, Insurance)</label>
+            <span class="live-val text-muted">{{ formatPrice(roiForm.get('annualExpenses')?.value || 0) }} / yr</span>
+          </div>
+          <input
+            id="calcExpenses"
+            type="number"
+            class="form-control"
+            formControlName="annualExpenses"
+            step="5000"
+          />
+        </div>
+
+        <!-- Holding Period Slider -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="calcYears" class="form-label">Investment Holding Horizon</label>
+            <span class="live-val highlight-blue">{{ roiForm.get('holdingYears')?.value }} Years</span>
+          </div>
+          <input
+            id="calcYears"
+            type="range"
+            class="range-slider"
+            min="1"
+            max="20"
+            formControlName="holdingYears"
+          />
+          <div class="slider-marks">
+            <span>1 Year</span>
+            <span>5 Years</span>
+            <span>10 Years</span>
+            <span>20 Years</span>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right: Computed Results Dashboard -->
+    <div class="calculator-card results-card">
+      <h2 class="card-heading">Financial Return Analysis</h2>
+
+      <!-- Primary KPI Callout -->
+      <div class="primary-kpi-banner">
+        <div class="kpi-block">
+          <span class="kpi-label">Cumulative Net ROI</span>
+          <div class="kpi-value highlight-green">{{ results.totalRoiPercent }}%</div>
+          <span class="kpi-sub">Over {{ roiForm.get('holdingYears')?.value }} years</span>
+        </div>
+        <div class="kpi-block">
+          <span class="kpi-label">Annualized Return (CAGR)</span>
+          <div class="kpi-value highlight-blue">{{ results.annualizedRoiPercent }}% / yr</div>
+          <span class="kpi-sub">Compounded yearly gain</span>
+        </div>
+      </div>
+
+      <!-- Detailed Breakdown Metrics -->
+      <div class="breakdown-list">
+        <div class="breakdown-row">
+          <span class="metric-name">Gross Rental Yield</span>
+          <span class="metric-figure font-semibold">{{ results.grossYieldPercent }}%</span>
+        </div>
+
+        <div class="breakdown-row">
+          <span class="metric-name">Net Rental Yield (post expenses)</span>
+          <span class="metric-figure text-green font-semibold">{{ results.netYieldPercent }}%</span>
+        </div>
+
+        <div class="breakdown-row">
+          <span class="metric-name">Annual Net Rental Cash Flow</span>
+          <span class="metric-figure font-mono">{{ formatPrice(results.annualRentNet) }}</span>
+        </div>
+
+        <div class="breakdown-row">
+          <span class="metric-name">Capital Appreciation Growth</span>
+          <span class="metric-figure font-mono font-semibold" [class.text-green]="results.capitalAppreciation >= 0">
+            {{ results.capitalAppreciation >= 0 ? '+' : '' }}{{ formatPrice(results.capitalAppreciation) }}
+            <small>({{ results.capitalAppreciationPercent }}%)</small>
+          </span>
+        </div>
+
+        <div class="breakdown-row total-profit-row">
+          <span class="metric-name">Total Estimated Net Wealth Created</span>
+          <span class="metric-figure font-mono text-green font-bold">
+            {{ formatPrice(results.totalNetProfit) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Recommendation Notice -->
+      <div class="roi-summary-note">
+        <span class="note-icon">&#128161;</span>
+        <p class="note-text">
+          @if (results.annualizedRoiPercent >= 12) {
+            <strong>Outstanding Investment Prospect:</strong> Projected annualized return of {{ results.annualizedRoiPercent }}% comfortably outperforms standard benchmark fixed deposits and equities.
+          } @else if (results.annualizedRoiPercent >= 8) {
+            <strong>Balanced Asset Prospect:</strong> Generates healthy capital preservation with dependable annual cash flows.
+          } @else {
+            <strong>Moderate Yield:</strong> Consider negotiating acquisition pricing or adjusting rental strategy to enhance return margins.
+          }
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,124 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    
+    <!-- Branding Header -->
+    <div class="login-header">
+      <div class="brand-badge">&#127970;</div>
+      <h1 class="login-title">Portal Sign In</h1>
+      <p class="login-subtitle">
+        Access CRM leads, property listings management, and portfolio tools
+      </p>
+    </div>
+
+    <!-- Active Session Banner (if already logged in) -->
+    @if (isLoggedIn$ | async) {
+      @if (currentUser$ | async; as user) {
+        <div class="active-session-box">
+          <div class="session-info">
+            <span class="session-indicator">&#9679;</span>
+            <span>Logged in as <strong>{{ user.name }}</strong> ({{ user.role }})</span>
+          </div>
+          <div class="session-actions">
+            <a [routerLink]="returnUrl" class="btn btn-primary btn-sm">Continue to Portal</a>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="logout()">Sign Out</button>
+          </div>
+        </div>
+      }
+    } @else {
+      <!-- Error Feedback Alert -->
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          <span class="alert-icon">&#9888;</span>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+        <!-- Username Field -->
+        <div class="form-group">
+          <label for="username" class="form-label">Username</label>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            class="form-control"
+            [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+            placeholder="Enter username (e.g. admin)"
+            autocomplete="username"
+          />
+          @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+            <span class="field-error">Username is required.</span>
+          }
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            class="form-control"
+            [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            placeholder="Enter password (e.g. admin123)"
+            autocomplete="current-password"
+          />
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <span class="field-error">Password is required (min 4 characters).</span>
+          }
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn-primary submit-btn"
+          [disabled]="isLoading"
+        >
+          @if (isLoading) {
+            <span class="btn-spinner"></span> Authenticating...
+          } @else {
+            Sign In to Dashboard
+          }
+        </button>
+      </form>
+
+      <!-- Quick Demo Accounts Helper -->
+      <div class="demo-accounts-section">
+        <div class="demo-heading">
+          <span class="demo-line"></span>
+          <span class="demo-text">Quick Demo Accounts</span>
+          <span class="demo-line"></span>
+        </div>
+
+        <p class="demo-instruction">Click an account below to auto-fill credentials:</p>
+
+        <div class="demo-buttons-grid">
+          <button
+            type="button"
+            class="demo-chip chip-admin"
+            (click)="fillDemoCredentials('admin', 'admin123')"
+          >
+            <strong>Admin:</strong> admin / admin123
+          </button>
+
+          <button
+            type="button"
+            class="demo-chip chip-agent"
+            (click)="fillDemoCredentials('agent', 'agent123')"
+          >
+            <strong>Agent:</strong> agent / agent123
+          </button>
+
+          <button
+            type="button"
+            class="demo-chip chip-investor"
+            (click)="fillDemoCredentials('investor', 'investor123')"
+          >
+            <strong>Investor:</strong> investor / investor123
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

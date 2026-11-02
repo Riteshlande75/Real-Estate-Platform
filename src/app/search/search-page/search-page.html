@@ -1,0 +1,160 @@
+<div class="search-page-container">
+  <!-- Toast Feedback -->
+  @if (toastMessage) {
+    <div class="toast-notification">
+      {{ toastMessage }}
+    </div>
+  }
+
+  <!-- Page Header & Search Bar -->
+  <header class="search-hero">
+    <h1 class="search-title">Advanced Property Search</h1>
+    <p class="search-subtitle">Search verified investment opportunities by keyword, city, budget, and configuration.</p>
+
+    <div class="search-bar-row">
+      @if (filters$ | async; as filters) {
+        <div class="search-input-wrapper">
+          <span class="search-icon">&#128269;</span>
+          <input
+            type="text"
+            class="search-input"
+            [value]="filters.keyword || ''"
+            (input)="onKeywordInput($any($event.target).value)"
+            placeholder="Search by locality, title, amenity or city (e.g. Worli, Villa, Sea View)..."
+          />
+          @if (filters.keyword) {
+            <button
+              type="button"
+              class="clear-btn"
+              (click)="clearKeyword()"
+              title="Clear search"
+            >
+              &times;
+            </button>
+          }
+        </div>
+
+        <div class="sort-wrapper">
+          <label for="sortBy" class="sort-label">Sort by:</label>
+          <select
+            id="sortBy"
+            class="sort-select"
+            [value]="filters.sortBy || 'newest'"
+            (change)="onSortChange($any($event.target).value)"
+          >
+            <option value="newest">Newest Added</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="area">Largest Area (Sq Ft)</option>
+          </select>
+        </div>
+      }
+    </div>
+  </header>
+
+  <!-- Two-Column Layout: Sidebar Filters + Results Grid -->
+  <div class="search-layout">
+    <!-- Left: Filter Panel -->
+    <div class="filter-sidebar">
+      <app-filter-panel></app-filter-panel>
+    </div>
+
+    <!-- Right: Search Results -->
+    <main class="results-main">
+      @if (results$ | async; as properties) {
+        <div class="results-meta-bar">
+          <span class="results-count">
+            Showing <strong>{{ properties.length }}</strong> {{ properties.length === 1 ? 'property' : 'properties' }}
+          </span>
+        </div>
+
+        @if (properties.length > 0) {
+          <div class="search-results-grid">
+            @for (prop of properties; track prop.id) {
+              <article class="search-card" (click)="viewDetails(prop.id)">
+                <!-- Media -->
+                <div class="card-media">
+                  <img
+                    [src]="prop.images[0] || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'"
+                    [alt]="prop.title"
+                    class="card-img"
+                    loading="lazy"
+                  />
+                  <div class="badge-group">
+                    <span class="badge type-badge">{{ prop.type }}</span>
+                    @if (prop.featured) {
+                      <span class="badge featured-badge">Featured</span>
+                    }
+                  </div>
+                  <div class="price-overlay">
+                    {{ formatPrice(prop.price) }}
+                  </div>
+                </div>
+
+                <!-- Body -->
+                <div class="card-body">
+                  <h2 class="card-title" [title]="prop.title">{{ prop.title }}</h2>
+                  <p class="card-location">
+                    <span class="location-icon">&#128205;</span>
+                    <span class="location-text">{{ prop.address }}</span>
+                  </p>
+
+                  <div class="card-specs">
+                    @if (prop.bedrooms > 0) {
+                      <span><strong>{{ prop.bedrooms }}</strong> Beds</span>
+                      <span class="dot">•</span>
+                    }
+                    @if (prop.bathrooms > 0) {
+                      <span><strong>{{ prop.bathrooms }}</strong> Baths</span>
+                      <span class="dot">•</span>
+                    }
+                    <span><strong>{{ prop.area }}</strong> sq ft</span>
+                  </div>
+
+                  <div class="card-rate">
+                    ₹{{ prop.pricePerSqFt }} / sq ft
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="card-actions">
+                    <button
+                      type="button"
+                      class="btn btn-outline"
+                      (click)="viewDetails(prop.id)"
+                    >
+                      View Details
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      (click)="addToCompare(prop, $event)"
+                      title="Add to comparison"
+                    >
+                      Compare
+                    </button>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <!-- No Results Empty State -->
+          <div class="no-results-card">
+            <div class="no-results-icon">&#128269;</div>
+            <h3 class="no-results-title">No Matching Properties Found</h3>
+            <p class="no-results-text">
+              We couldn't find any properties matching your current filter criteria. Try expanding your budget range or clearing search keywords.
+            </p>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="resetFilters()"
+            >
+              Reset All Filters
+            </button>
+          </div>
+        }
+      }
+    </main>
+  </div>
+</div>

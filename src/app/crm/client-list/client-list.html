@@ -1,0 +1,234 @@
+<div class="client-list-page">
+  <!-- Toast feedback -->
+  @if (toastMessage) {
+    <div class="toast-notification">
+      {{ toastMessage }}
+    </div>
+  }
+
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Client & Investor CRM Directory</h1>
+      <p class="page-subtitle">Track prospective buyers, institutional investors, and their investment budgets.</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" (click)="openAddModal()">
+        + Add New Client
+      </button>
+    </div>
+  </header>
+
+  <!-- Search Filter -->
+  <div class="search-filter-bar">
+    <div class="search-box">
+      <span class="search-icon">&#128269;</span>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Filter clients by name, city, email, or property preference..."
+        (input)="onSearch($any($event.target).value)"
+      />
+    </div>
+  </div>
+
+  <!-- Table View -->
+  @if (filteredClients$ | async; as clients) {
+    @if (clients.length > 0) {
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="client-table">
+            <thead>
+              <tr>
+                <th>Client Name</th>
+                <th>Contact Details</th>
+                <th>Location</th>
+                <th>Target Budget (INR)</th>
+                <th>Preferred Asset</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (c of clients; track c.id) {
+                <tr>
+                  <!-- Name & Avatar initial -->
+                  <td>
+                    <div class="client-name-cell">
+                      <div class="client-avatar-badge">{{ c.name.charAt(0) }}</div>
+                      <span class="client-full-name">{{ c.name }}</span>
+                    </div>
+                  </td>
+
+                  <!-- Contact -->
+                  <td>
+                    <div class="contact-stack">
+                      <span class="contact-email">{{ c.email }}</span>
+                      <span class="contact-phone">{{ c.phone }}</span>
+                    </div>
+                  </td>
+
+                  <!-- City -->
+                  <td>
+                    <span class="city-pill">{{ c.city }}</span>
+                  </td>
+
+                  <!-- Budget -->
+                  <td>
+                    <span class="budget-badge">{{ formatBudget(c.budget) }}</span>
+                  </td>
+
+                  <!-- Preferred Type -->
+                  <td>
+                    <span class="type-pill">{{ c.preferredType || 'Any' }}</span>
+                  </td>
+
+                  <!-- Actions -->
+                  <td class="text-right">
+                    <div class="actions-group">
+                      <button
+                        type="button"
+                        class="btn-icon edit-btn"
+                        (click)="openEditModal(c)"
+                        title="Edit client"
+                      >
+                        &#9998;
+                      </button>
+                      <button
+                        type="button"
+                        class="btn-icon delete-btn"
+                        (click)="deleteClient(c.id, c.name)"
+                        title="Delete client"
+                      >
+                        &#128465;
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <div class="empty-clients-box">
+        <div class="empty-icon">&#128101;</div>
+        <h3>No Clients Found</h3>
+        <p>No client records match your query. Add a new prospective buyer or clear the search query.</p>
+        <button type="button" class="btn btn-primary" (click)="openAddModal()">
+          Register Client
+        </button>
+      </div>
+    }
+  }
+
+  <!-- Add / Edit Modal -->
+  @if (showModal) {
+    <div class="modal-backdrop" (click)="closeModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2 class="modal-title">
+            {{ editingClientId ? 'Edit Client Record' : 'Register New Client' }}
+          </h2>
+          <button type="button" class="close-btn" (click)="closeModal()">&times;</button>
+        </div>
+
+        <form [formGroup]="clientForm" (ngSubmit)="saveClient()" novalidate>
+          <div class="modal-body">
+            <!-- Name -->
+            <div class="form-group">
+              <label for="clientName" class="form-label">Full Name *</label>
+              <input
+                id="clientName"
+                type="text"
+                class="form-control"
+                formControlName="name"
+                placeholder="e.g. Rajesh Mehta"
+              />
+              @if (clientForm.get('name')?.invalid && clientForm.get('name')?.touched) {
+                <span class="field-error">Name is required (min 3 chars).</span>
+              }
+            </div>
+
+            <!-- Email & Phone -->
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label for="clientEmail" class="form-label">Email Address *</label>
+                <input
+                  id="clientEmail"
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  placeholder="client@investor.in"
+                />
+                @if (clientForm.get('email')?.invalid && clientForm.get('email')?.touched) {
+                  <span class="field-error">Valid email is required.</span>
+                }
+              </div>
+
+              <div class="form-group col-6">
+                <label for="clientPhone" class="form-label">Phone Number *</label>
+                <input
+                  id="clientPhone"
+                  type="text"
+                  class="form-control"
+                  formControlName="phone"
+                  placeholder="+91 98220 11223"
+                />
+                @if (clientForm.get('phone')?.invalid && clientForm.get('phone')?.touched) {
+                  <span class="field-error">Phone number is required.</span>
+                }
+              </div>
+            </div>
+
+            <!-- City & Preferred Type -->
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label for="clientCity" class="form-label">City *</label>
+                <select id="clientCity" class="form-control" formControlName="city">
+                  @for (c of cities; track c) {
+                    <option [value]="c">{{ c }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="form-group col-6">
+                <label for="preferredType" class="form-label">Preferred Property Type *</label>
+                <select id="preferredType" class="form-control" formControlName="preferredType">
+                  @for (t of propertyTypes; track t) {
+                    <option [value]="t">{{ t }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <!-- Budget -->
+            <div class="form-group">
+              <label for="clientBudget" class="form-label">Investment Budget (₹ INR) *</label>
+              <input
+                id="clientBudget"
+                type="number"
+                class="form-control"
+                formControlName="budget"
+                placeholder="e.g. 35000000"
+                step="500000"
+              />
+              @if (clientForm.get('budget')?.invalid && clientForm.get('budget')?.touched) {
+                <span class="field-error">Valid budget is required.</span>
+              }
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
+              {{ editingClientId ? 'Update Client' : 'Save Client' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,116 @@
+<aside class="filter-panel-card">
+  @if (filters$ | async; as filters) {
+    <!-- Panel Header -->
+    <div class="panel-header">
+      <div class="header-title-group">
+        <span class="filter-icon">&#9881;</span>
+        <h2 class="panel-title">Filter Criteria</h2>
+      </div>
+      <button
+        type="button"
+        class="reset-btn"
+        (click)="resetAll()"
+        title="Reset all filters"
+      >
+        &#8634; Reset
+      </button>
+    </div>
+
+    <!-- City Filter -->
+    <div class="filter-group">
+      <label for="filterCity" class="filter-label">City / Location</label>
+      <select
+        id="filterCity"
+        class="filter-select"
+        [value]="filters.city || 'All'"
+        (change)="setCity($any($event.target).value)"
+      >
+        @for (c of cities; track c) {
+          <option [value]="c">{{ c === 'All' ? 'All Locations' : c }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Property Type Filter -->
+    <div class="filter-group">
+      <label for="filterType" class="filter-label">Property Type</label>
+      <select
+        id="filterType"
+        class="filter-select"
+        [value]="filters.type || 'All'"
+        (change)="setType($any($event.target).value)"
+      >
+        @for (t of propertyTypes; track t) {
+          <option [value]="t">{{ t === 'All' ? 'All Types' : t }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Bedrooms Filter -->
+    <div class="filter-group">
+      <span class="filter-label">Minimum Bedrooms</span>
+      <div class="bedroom-chips-group">
+        @for (opt of bedroomOptions; track opt.label) {
+          <button
+            type="button"
+            class="chip-btn"
+            [class.active]="filters.bedrooms === opt.value"
+            (click)="setBedrooms(opt.value)"
+          >
+            {{ opt.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Price Range Filter -->
+    <div class="filter-group">
+      <span class="filter-label">Price Range (₹ INR)</span>
+      
+      <!-- Quick price presets -->
+      <div class="price-presets-grid">
+        @for (preset of pricePresets; track preset.label) {
+          <button
+            type="button"
+            class="preset-btn"
+            [class.active]="filters.minPrice === preset.min && filters.maxPrice === preset.max"
+            (click)="setPricePreset(preset.min, preset.max)"
+          >
+            {{ preset.label }}
+          </button>
+        }
+      </div>
+
+      <!-- Custom Min & Max inputs -->
+      <div class="price-inputs-row">
+        <div class="input-col">
+          <label for="minPrice" class="sub-label">Min (₹)</label>
+          <input
+            id="minPrice"
+            type="number"
+            class="filter-input"
+            [value]="filters.minPrice || ''"
+            (input)="onMinPriceChange($any($event.target).value)"
+            placeholder="Min"
+            step="500000"
+          />
+        </div>
+
+        <span class="range-divider">—</span>
+
+        <div class="input-col">
+          <label for="maxPrice" class="sub-label">Max (₹)</label>
+          <input
+            id="maxPrice"
+            type="number"
+            class="filter-input"
+            [value]="filters.maxPrice || ''"
+            (input)="onMaxPriceChange($any($event.target).value)"
+            placeholder="Max"
+            step="500000"
+          />
+        </div>
+      </div>
+    </div>
+  }
+</aside>

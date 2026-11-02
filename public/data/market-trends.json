@@ -1,0 +1,29 @@
+[
+  { "city": "Mumbai", "month": "Aug", "avgPricePerSqFt": 18900 },
+  { "city": "Mumbai", "month": "Sep", "avgPricePerSqFt": 19250 },
+  { "city": "Mumbai", "month": "Oct", "avgPricePerSqFt": 19600 },
+  { "city": "Mumbai", "month": "Nov", "avgPricePerSqFt": 19850 },
+  { "city": "Mumbai", "month": "Dec", "avgPricePerSqFt": 20100 },
+  { "city": "Mumbai", "month": "Jan", "avgPricePerSqFt": 20450 },
+
+  { "city": "Bengaluru", "month": "Aug", "avgPricePerSqFt": 7800 },
+  { "city": "Bengaluru", "month": "Sep", "avgPricePerSqFt": 7950 },
+  { "city": "Bengaluru", "month": "Oct", "avgPricePerSqFt": 8100 },
+  { "city": "Bengaluru", "month": "Nov", "avgPricePerSqFt": 8250 },
+  { "city": "Bengaluru", "month": "Dec", "avgPricePerSqFt": 8350 },
+  { "city": "Bengaluru", "month": "Jan", "avgPricePerSqFt": 8500 },
+
+  { "city": "Pune", "month": "Aug", "avgPricePerSqFt": 8400 },
+  { "city": "Pune", "month": "Sep", "avgPricePerSqFt": 8550 },
+  { "city": "Pune", "month": "Oct", "avgPricePerSqFt": 8700 },
+  { "city": "Pune", "month": "Nov", "avgPricePerSqFt": 8850 },
+  { "city": "Pune", "month": "Dec", "avgPricePerSqFt": 8950 },
+  { "city": "Pune", "month": "Jan", "avgPricePerSqFt": 9100 },
+
+  { "city": "Hyderabad", "month": "Aug", "avgPricePerSqFt": 10200 },
+  { "city": "Hyderabad", "month": "Sep", "avgPricePerSqFt": 10450 },
+  { "city": "Hyderabad", "month": "Oct", "avgPricePerSqFt": 10700 },
+  { "city": "Hyderabad", "month": "Nov", "avgPricePerSqFt": 10900 },
+  { "city": "Hyderabad", "month": "Dec", "avgPricePerSqFt": 11050 },
+  { "city": "Hyderabad", "month": "Jan", "avgPricePerSqFt": 11300 }
+]

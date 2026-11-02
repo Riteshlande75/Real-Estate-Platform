@@ -1,0 +1,90 @@
+[
+  {
+    "id": "enq-1",
+    "propertyId": "prop-101",
+    "propertyTitle": "Luxury Sea-Facing 3BHK Residence",
+    "clientName": "Rajesh Mehta",
+    "clientEmail": "rajesh.mehta@investor.in",
+    "clientPhone": "+91 98220 11223",
+    "message": "Interested in private viewing this Saturday. Please share the floor plan and society maintenance charges.",
+    "status": "New",
+    "date": "2026-02-15T10:30:00.000Z"
+  },
+  {
+    "id": "enq-2",
+    "propertyId": "prop-102",
+    "propertyTitle": "Contemporary Gated Villa with Private Pool",
+    "clientName": "Ananya Sharma",
+    "clientEmail": "ananya.sharma@techventure.com",
+    "clientPhone": "+91 98860 33445",
+    "message": "Is this villa ready for immediate possession? What is the expected rental yield in Whitefield?",
+    "status": "In Progress",
+    "date": "2026-02-16T14:15:00.000Z"
+  },
+  {
+    "id": "enq-3",
+    "propertyId": "prop-105",
+    "propertyTitle": "Prime Commercial Office Space",
+    "clientName": "Kavita Rao",
+    "clientEmail": "kavita.rao@capitalgroup.in",
+    "clientPhone": "+91 98490 55667",
+    "message": "Requesting corporate lease agreement copy and lock-in period details for the IT floor in HITEC City.",
+    "status": "New",
+    "date": "2026-02-18T09:45:00.000Z"
+  },
+  {
+    "id": "enq-4",
+    "propertyId": "prop-103",
+    "propertyTitle": "Skyline View Penthouse on Golf Course Road",
+    "clientName": "Arjun Kapoor",
+    "clientEmail": "arjun.kapoor@globalre.com",
+    "clientPhone": "+91 98111 77889",
+    "message": "We have reviewed the specifications and would like to proceed with the legal title verification report.",
+    "status": "Closed",
+    "date": "2026-02-10T16:20:00.000Z"
+  },
+  {
+    "id": "enq-5",
+    "propertyId": "prop-106",
+    "propertyTitle": "Residential Villa Plot in Gated Community",
+    "clientName": "Meera Nambiar",
+    "clientEmail": "meera.nambiar@investtech.in",
+    "clientPhone": "+91 98451 22334",
+    "message": "Is bank loan approval available for this plot from SBI or HDFC? When can we schedule a site visit?",
+    "status": "New",
+    "date": "2026-02-19T11:15:00.000Z"
+  },
+  {
+    "id": "enq-6",
+    "propertyId": "prop-104",
+    "propertyTitle": "Smart 2BHK Urban Apartment",
+    "clientName": "Siddharth Nair",
+    "clientEmail": "siddharth.nair@innovate.co",
+    "clientPhone": "+91 97400 99001",
+    "message": "Looking for rental projection document and expected maintenance fees before signing agreement.",
+    "status": "In Progress",
+    "date": "2026-02-20T14:30:00.000Z"
+  },
+  {
+    "id": "enq-7",
+    "propertyId": "prop-107",
+    "propertyTitle": "Bespoke 3BHK Lakeview Residence",
+    "clientName": "Aditya Singhal",
+    "clientEmail": "aditya.singhal@capitalflow.org",
+    "clientPhone": "+91 98113 44556",
+    "message": "Would like to negotiate on registration charges and check available floor options on higher levels.",
+    "status": "New",
+    "date": "2026-02-21T09:00:00.000Z"
+  },
+  {
+    "id": "enq-8",
+    "propertyId": "prop-108",
+    "propertyTitle": "Mediterranean Luxury Villa",
+    "clientName": "Tanvi Joshi",
+    "clientEmail": "tanvi.joshi@designstudio.in",
+    "clientPhone": "+91 99201 88776",
+    "message": "Please share the structural warranty terms and OC (Occupancy Certificate) copy for the Pune villa.",
+    "status": "Closed",
+    "date": "2026-02-22T17:45:00.000Z"
+  }
+]

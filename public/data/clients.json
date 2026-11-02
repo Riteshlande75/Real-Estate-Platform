@@ -1,0 +1,56 @@
+[
+  {
+    "id": "client-1",
+    "name": "Rajesh Mehta",
+    "email": "rajesh.mehta@investor.in",
+    "phone": "+91 98220 11223",
+    "city": "Mumbai",
+    "budget": 45000000,
+    "preferredType": "Apartment"
+  },
+  {
+    "id": "client-2",
+    "name": "Ananya Sharma",
+    "email": "ananya.sharma@techventure.com",
+    "phone": "+91 98860 33445",
+    "city": "Bengaluru",
+    "budget": 35000000,
+    "preferredType": "Villa"
+  },
+  {
+    "id": "client-3",
+    "name": "Kavita Rao",
+    "email": "kavita.rao@capitalgroup.in",
+    "phone": "+91 98490 55667",
+    "city": "Hyderabad",
+    "budget": 30000000,
+    "preferredType": "Commercial"
+  },
+  {
+    "id": "client-4",
+    "name": "Arjun Kapoor",
+    "email": "arjun.kapoor@globalre.com",
+    "phone": "+91 98111 77889",
+    "city": "Gurugram",
+    "budget": 60000000,
+    "preferredType": "Penthouse"
+  },
+  {
+    "id": "client-5",
+    "name": "Siddharth Nair",
+    "email": "siddharth.nair@innovate.co",
+    "phone": "+91 97400 99001",
+    "city": "Pune",
+    "budget": 12000000,
+    "preferredType": "Apartment"
+  },
+  {
+    "id": "client-6",
+    "name": "Meera Nambiar",
+    "email": "meera.nambiar@investtech.in",
+    "phone": "+91 98451 22334",
+    "city": "Bengaluru",
+    "budget": 22000000,
+    "preferredType": "Villa"
+  }
+]
