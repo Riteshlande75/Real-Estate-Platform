@@ -1,59 +1,57 @@
-# RealEstatePlatform
+# 🏠 Real Estate Platform
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.28.
+> An Angular 21 full-stack web application for property listings, investment portfolio management, CRM, and real estate market analytics.
 
-## Development server
+---
 
-To start a local development server, run:
+## 📖 Documentation & Project Report
 
-```bash
-ng serve
-```
+- **Technical Documentation:** [DOCUMENTATION.md](DOCUMENTATION.md)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## ⚡ Quick Start
 
 ```bash
-ng generate component component-name
+# Install dependencies
+npm install
+
+# Start development server
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Open [http://localhost:4200](http://localhost:4200) in your browser.
 
-```bash
-ng generate --help
-```
+### Demo Login Credentials
 
-## Building
+| Role | Username | Password |
+|---|---|---|
+| Admin | `admin` | `admin123` |
+| Agent | `agent` | `agent123` |
+| Investor | `investor` | `investor123` |
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## 🛠️ Common Commands
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+| Command | Description |
+|---|---|
+| `npm start` | Start dev server at `http://localhost:4200` |
+| `npm run build` | Production build (output: `dist/`) |
+| `npm test` | Run unit tests with Vitest |
+| `npm run watch` | Build in watch mode |
+| `npm run serve:ssr:real-estate-platform` | Start SSR production server |
 
-## Running unit tests
+---
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## 🔗 Additional Resources
 
-```bash
-ng test
-```
+- [Angular CLI Documentation](https://angular.dev/tools/cli)
+- [Angular 21 Release Notes](https://angular.dev)
+- [Chart.js Documentation](https://www.chartjs.org/docs/)
+- [ng2-charts Documentation](https://valor-software.com/ng2-charts/)
+- [Vitest Documentation](https://vitest.dev/)
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+*For detailed technical documentation, see [DOCUMENTATION.md](DOCUMENTATION.md)*
