@@ -4,7 +4,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { PropertyService } from '../../core/services/property.service';
-import { Property, Investment } from '../../core/models/models';
+import { CompareService } from '../../core/services/compare.service';
+import { PortfolioService } from '../../core/services/portfolio.service';
+import { Property } from '../../core/models/models';
 import { ImageGallery } from '../image-gallery/image-gallery';
 import { EnquiryForm } from '../../crm/enquiry-form/enquiry-form';
 
@@ -18,6 +20,8 @@ export class PropertyDetail {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly propertyService = inject(PropertyService);
+  private readonly compareService = inject(CompareService);
+  private readonly portfolioService = inject(PortfolioService);
 
   // Observable of the currently selected property based on the :id route parameter
   readonly property$ = this.route.paramMap.pipe(
@@ -50,62 +54,33 @@ export class PropertyDetail {
   }
 
   /**
-   * Adds the current property to the comparison list (stored in localStorage)
+   * Adds the current property to the comparison list via CompareService
    */
   addToCompare(property: Property): void {
-    try {
-      const stored = localStorage.getItem('re_compare');
-      let compareIds: string[] = stored ? JSON.parse(stored) : [];
-
-      if (compareIds.includes(property.id)) {
-        this.showToast(`"${property.title}" is already in comparison list.`);
-        return;
-      }
-
-      if (compareIds.length >= 3) {
-        this.showToast('You can compare a maximum of 3 properties at once.');
-        return;
-      }
-
-      compareIds.push(property.id);
-      localStorage.setItem('re_compare', JSON.stringify(compareIds));
-      this.showToast(`Added "${property.title}" to Compare (${compareIds.length}/3).`);
-    } catch (e) {
-      console.warn('LocalStorage error:', e);
-    }
+    const result = this.compareService.add(property.id);
+    this.showToast(result.message);
   }
 
   /**
-   * Adds the property to the investor portfolio (stored in localStorage re_investments)
+   * Adds the property to the investor portfolio via PortfolioService
    */
   addToPortfolio(property: Property): void {
-    try {
-      const stored = localStorage.getItem('re_investments');
-      let investments: Investment[] = stored ? JSON.parse(stored) : [];
-
-      const exists = investments.some((inv) => inv.propertyId === property.id);
-      if (exists) {
-        this.showToast(`"${property.title}" is already in your Investment Portfolio.`);
-        return;
+    this.portfolioService.add({
+      propertyId: property.id,
+      propertyTitle: property.title,
+      city: property.city,
+      purchasePrice: property.price,
+      currentValue: property.price,
+      monthlyRent: Math.round(property.price * 0.0035), // Estimated ~4.2% annual rental yield
+      purchaseDate: new Date().toISOString().split('T')[0],
+    }).subscribe({
+      next: () => {
+        this.showToast(`Successfully added "${property.title}" to your Portfolio!`);
+      },
+      error: () => {
+        this.showToast(`Unable to add "${property.title}" to portfolio.`);
       }
-
-      const newInvestment: Investment = {
-        id: 'inv-' + Date.now(),
-        propertyId: property.id,
-        propertyTitle: property.title,
-        city: property.city,
-        purchasePrice: property.price,
-        currentValue: property.price,
-        monthlyRent: Math.round(property.price * 0.0035), // Estimated ~4.2% annual rental yield
-        purchaseDate: new Date().toISOString().split('T')[0],
-      };
-
-      investments.push(newInvestment);
-      localStorage.setItem('re_investments', JSON.stringify(investments));
-      this.showToast(`Successfully added "${property.title}" to your Portfolio!`);
-    } catch (e) {
-      console.warn('LocalStorage error:', e);
-    }
+    });
   }
 
   /**

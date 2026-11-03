@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SearchService } from '../../core/services/search.service';
+import { CompareService } from '../../core/services/compare.service';
 import { FilterPanel } from '../filter-panel/filter-panel';
 import { Property, SearchFilter } from '../../core/models/models';
 
@@ -13,6 +14,7 @@ import { Property, SearchFilter } from '../../core/models/models';
 })
 export class SearchPage {
   private readonly searchService = inject(SearchService);
+  private readonly compareService = inject(CompareService);
   private readonly router = inject(Router);
 
   // Filtered reactive properties stream
@@ -63,30 +65,12 @@ export class SearchPage {
   }
 
   /**
-   * Adds selected property to compare list (max 3) in localStorage
+   * Adds selected property to compare list via CompareService
    */
   addToCompare(property: Property, event: Event): void {
     event.stopPropagation();
-    try {
-      const stored = localStorage.getItem('re_compare');
-      let compareIds: string[] = stored ? JSON.parse(stored) : [];
-
-      if (compareIds.includes(property.id)) {
-        this.showToast(`"${property.title}" is already in comparison list.`);
-        return;
-      }
-
-      if (compareIds.length >= 3) {
-        this.showToast('You can compare a maximum of 3 properties at once.');
-        return;
-      }
-
-      compareIds.push(property.id);
-      localStorage.setItem('re_compare', JSON.stringify(compareIds));
-      this.showToast(`Added "${property.title}" to Compare (${compareIds.length}/3).`);
-    } catch (e) {
-      console.warn('LocalStorage error:', e);
-    }
+    const result = this.compareService.add(property.id);
+    this.showToast(result.message);
   }
 
   /**
