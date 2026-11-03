@@ -107,52 +107,55 @@
     }
   }
 
-  <!-- Add / Edit Modal (Only rendered when open) -->
+  <!-- Add / Edit Modal -->
   @if (showFormModal && (isAdmin$ | async)) {
     <div class="modal-backdrop" (click)="closeModal()">
-      <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3 class="modal-title">{{ editingAgentId ? 'Edit Agent Profile' : 'Register New Agent' }}</h3>
-          <button type="button" class="close-btn" (click)="closeModal()">&times;</button>
+          <div class="modal-title-wrap">
+            <span class="modal-badge">{{ editingAgentId ? 'Update' : 'New Agent' }}</span>
+            <h3 class="modal-title">{{ editingAgentId ? 'Edit Agent Profile' : 'Register Real Estate Agent' }}</h3>
+          </div>
+          <button type="button" class="close-btn" (click)="closeModal()" aria-label="Close dialog">&times;</button>
         </div>
 
         <form [formGroup]="agentForm" (ngSubmit)="saveAgent()">
           <div class="modal-body">
             <!-- Full Name -->
             <div class="form-group">
-              <label for="agentName" class="form-label">Full Name *</label>
+              <label for="agentName" class="form-label">Full Name <span class="required">*</span></label>
               <input
                 id="agentName"
                 type="text"
                 class="form-control"
                 formControlName="name"
-                placeholder="e.g. Ananya Singhania"
+                placeholder="e.g. Vikram Singhania"
                 [class.is-invalid]="agentForm.get('name')?.invalid && agentForm.get('name')?.touched"
               />
               @if (agentForm.get('name')?.invalid && agentForm.get('name')?.touched) {
-                <span class="error-msg">Full name is required (min 3 chars).</span>
+                <span class="error-msg">Full name is required (minimum 3 characters).</span>
               }
             </div>
 
-            <!-- Email & Phone -->
+            <!-- Email & Phone Row -->
             <div class="form-row">
               <div class="form-group col-6">
-                <label for="agentEmail" class="form-label">Email Address *</label>
+                <label for="agentEmail" class="form-label">Email Address <span class="required">*</span></label>
                 <input
                   id="agentEmail"
                   type="email"
                   class="form-control"
                   formControlName="email"
-                  placeholder="agent@platform.com"
+                  placeholder="name@platform.com"
                   [class.is-invalid]="agentForm.get('email')?.invalid && agentForm.get('email')?.touched"
                 />
                 @if (agentForm.get('email')?.invalid && agentForm.get('email')?.touched) {
-                  <span class="error-msg">Valid email required.</span>
+                  <span class="error-msg">Valid email address required.</span>
                 }
               </div>
 
               <div class="form-group col-6">
-                <label for="agentPhone" class="form-label">Contact Number *</label>
+                <label for="agentPhone" class="form-label">Contact Number <span class="required">*</span></label>
                 <input
                   id="agentPhone"
                   type="tel"
@@ -162,15 +165,15 @@
                   [class.is-invalid]="agentForm.get('phone')?.invalid && agentForm.get('phone')?.touched"
                 />
                 @if (agentForm.get('phone')?.invalid && agentForm.get('phone')?.touched) {
-                  <span class="error-msg">Phone number required.</span>
+                  <span class="error-msg">Contact number required (min 8 digits).</span>
                 }
               </div>
             </div>
 
-            <!-- City & Active Listings -->
+            <!-- City & Active Listings Row -->
             <div class="form-row">
               <div class="form-group col-6">
-                <label for="agentCity" class="form-label">Regional Market *</label>
+                <label for="agentCity" class="form-label">Regional Market <span class="required">*</span></label>
                 <select id="agentCity" class="form-control" formControlName="city">
                   @for (c of cities; track c) {
                     <option [value]="c">{{ c }}</option>
@@ -186,11 +189,16 @@
                   class="form-control"
                   formControlName="activeListings"
                   min="0"
+                  placeholder="e.g. 5"
+                  [class.is-invalid]="agentForm.get('activeListings')?.invalid && agentForm.get('activeListings')?.touched"
                 />
+                @if (agentForm.get('activeListings')?.invalid && agentForm.get('activeListings')?.touched) {
+                  <span class="error-msg">Listings count must be 0 or greater.</span>
+                }
               </div>
             </div>
 
-            <!-- Rating & Photo URL -->
+            <!-- Rating & Photo URL Row -->
             <div class="form-row">
               <div class="form-group col-4">
                 <label for="agentRating" class="form-label">Rating (1-5)</label>
@@ -202,14 +210,19 @@
                   max="5"
                   class="form-control"
                   formControlName="rating"
+                  placeholder="4.8"
+                  [class.is-invalid]="agentForm.get('rating')?.invalid && agentForm.get('rating')?.touched"
                 />
+                @if (agentForm.get('rating')?.invalid && agentForm.get('rating')?.touched) {
+                  <span class="error-msg">Rating must be 1.0 - 5.0.</span>
+                }
               </div>
 
               <div class="form-group col-8">
-                <label for="agentImage" class="form-label">Profile Image URL</label>
+                <label for="agentImage" class="form-label">Profile Image URL (Optional)</label>
                 <input
                   id="agentImage"
-                  type="text"
+                  type="url"
                   class="form-control"
                   formControlName="image"
                   placeholder="https://images.unsplash.com/photo-..."
@@ -223,7 +236,7 @@
               Cancel
             </button>
             <button type="submit" class="btn btn-primary">
-              {{ editingAgentId ? 'Save Changes' : 'Register Agent' }}
+              {{ editingAgentId ? 'Save Changes' : '+ Register Agent' }}
             </button>
           </div>
         </form>

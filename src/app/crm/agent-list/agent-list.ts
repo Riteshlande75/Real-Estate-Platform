@@ -105,9 +105,9 @@ export class AgentList {
       email: agent.email,
       phone: agent.phone,
       city: agent.city,
-      activeListings: agent.activeListings || 1,
-      rating: agent.rating || 5.0,
-      image: agent.image || '',
+      activeListings: agent.activeListings ?? 1,
+      rating: agent.rating ?? 5.0,
+      image: agent.image ?? '',
     });
     this.showFormModal = true;
   }
@@ -131,29 +131,51 @@ export class AgentList {
 
     if (this.agentForm.invalid) {
       this.agentForm.markAllAsTouched();
+      this.showToast('Please correct the highlighted fields before saving.');
       return;
     }
 
     const formVal = this.agentForm.getRawValue();
     const fallbackImg =
       formVal.image && formVal.image.trim() !== ''
-        ? formVal.image
+        ? formVal.image.trim()
         : 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80';
 
+    const parsedListings = Number(formVal.activeListings);
+    const parsedRating = Number(formVal.rating);
+
+    const agentData: Agent = {
+      id: this.editingAgentId || ('agent-' + Date.now()),
+      name: (formVal.name || '').trim(),
+      email: (formVal.email || '').trim(),
+      phone: (formVal.phone || '').trim(),
+      city: formVal.city || 'Mumbai',
+      activeListings: !isNaN(parsedListings) && parsedListings >= 0 ? parsedListings : 1,
+      rating: !isNaN(parsedRating) && parsedRating > 0 ? parsedRating : 5.0,
+      image: fallbackImg,
+    };
+
     if (this.editingAgentId) {
-      const updated: Agent = {
-        id: this.editingAgentId,
-        ...formVal,
-        image: fallbackImg,
-      };
-      this.agentService.update(updated).subscribe(() => {
-        this.showToast(`Agent "${updated.name}" updated successfully.`);
-        this.closeModal();
+      this.agentService.update(agentData).subscribe({
+        next: (updated) => {
+          this.showToast(`Agent "${updated.name}" updated successfully.`);
+          this.closeModal();
+        },
+        error: (err) => {
+          this.showToast('Failed to update agent.');
+          console.error('Update agent error:', err);
+        }
       });
     } else {
-      this.agentService.add({ ...formVal, image: fallbackImg }).subscribe((created) => {
-        this.showToast(`New agent "${created.name}" registered successfully.`);
-        this.closeModal();
+      this.agentService.add(agentData).subscribe({
+        next: (created) => {
+          this.showToast(`New agent "${created.name}" registered successfully.`);
+          this.closeModal();
+        },
+        error: (err) => {
+          this.showToast('Failed to register new agent.');
+          console.error('Add agent error:', err);
+        }
       });
     }
   }
@@ -168,8 +190,14 @@ export class AgentList {
     }
 
     if (window.confirm(`Are you sure you want to delete agent "${name}"?`)) {
-      this.agentService.delete(id).subscribe(() => {
-        this.showToast(`Agent "${name}" removed from registry.`);
+      this.agentService.delete(id).subscribe({
+        next: () => {
+          this.showToast(`Agent "${name}" removed from registry.`);
+        },
+        error: (err) => {
+          this.showToast('Failed to delete agent.');
+          console.error('Delete agent error:', err);
+        }
       });
     }
   }

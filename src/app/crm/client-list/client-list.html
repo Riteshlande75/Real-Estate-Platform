@@ -126,7 +126,7 @@
   <!-- Add / Edit Client Modal (Admin Only) -->
   @if (showModal && (isAdmin$ | async)) {
     <div class="modal-backdrop" (click)="closeModal()">
-      <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
         <div class="modal-header">
           <h3 class="modal-title">{{ editingClientId ? 'Edit Client Record' : 'Add New Client Profile' }}</h3>
           <button type="button" class="close-btn" (click)="closeModal()">&times;</button>
