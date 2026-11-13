@@ -1,7 +1,7 @@
-# 📖 Real Estate Platform — Full Documentation
+# 📖 Real Estate Platform — Documentation
 
-> A comprehensive Angular 21 web application for real estate property listings, investment portfolio management, CRM, and market analytics.
->
+> An Angular 21 web application for property listings, investment portfolio management, CRM, and real estate market analytics.
+
 ---
 
 ## Table of Contents
@@ -11,57 +11,45 @@
 3. [Project Structure](#3-project-structure)
 4. [Getting Started](#4-getting-started)
 5. [Application Routes](#5-application-routes)
-6. [Core Modules](#6-core-modules)
-   - [Data Models](#data-models)
-   - [Services](#services)
-   - [Auth Guard](#auth-guard)
-7. [Feature Modules](#7-feature-modules)
-   - [Property Listings](#property-listings)
-   - [Search & Compare](#search--compare)
-   - [CRM (Auth + Agents + Clients + Enquiries)](#crm-auth--agents--clients--enquiries)
-   - [Portfolio & Market Insights](#portfolio--market-insights)
-8. [Authentication](#8-authentication)
-9. [Data Persistence](#9-data-persistence)
-10. [Build & Deployment](#10-build--deployment)
-11. [Testing](#11-testing)
-12. [Configuration Files](#12-configuration-files)
-13. [Known Limitations & Future Improvements](#13-known-limitations--future-improvements)
+6. [Core Services & State Architecture](#6-core-services--state-architecture)
+7. [Data Models](#7-data-models)
+8. [Authentication & Access Control](#8-authentication--access-control)
+9. [Data Persistence & Seed Assets](#9-data-persistence--seed-assets)
+10. [Build, SSR & Testing](#10-build-ssr--testing)
 
 ---
 
 ## 1. Project Overview
 
-The **Real Estate Platform** is a full-featured, Angular-based single-page application (SPA) with Server-Side Rendering (SSR) support. It is designed to serve multiple types of users — property seekers, real estate agents, CRM managers, and investors — through a unified, role-aware interface.
+The **Real Estate Platform** is a full-featured single-page application (SPA) with Server-Side Rendering (SSR) capabilities. It provides a role-aware interface for property buyers, real estate agents, CRM managers, and property investors.
 
 ### Key Capabilities
 
 | Feature | Description |
 |---|---|
-| 🏠 Property Listings | Browse, add, edit, and delete real estate properties |
-| 🔍 Advanced Search | Keyword, city, type, price-range, and bedroom filters |
-| ⚖️ Property Compare | Side-by-side comparison of up to 3 properties |
-| 📊 Portfolio Dashboard | Track investments, gain/loss, and ROI metrics |
-| 📈 Market Trends | City-wise price trend visualization using Chart.js |
-| 🧮 ROI Calculator | Compute projected returns based on user inputs |
-| 👥 CRM | Manage agents, clients, and property enquiries |
-| 🔐 Auth System | Role-based login (Admin / Agent / Investor) |
+| 🏠 **Property Listings** | Browse, create, edit, and delete real estate properties with image galleries |
+| 🔍 **Advanced Search & Filtering** | Real-time multi-filter search (keyword, city, property type, price range, BHK) |
+| ⚖️ **Property Comparison** | Side-by-side comparison matrix for up to 3 properties simultaneously |
+| 📊 **Portfolio Dashboard** | Real-time investment tracking, ROI benchmarks, and computed gain/loss metrics |
+| 📈 **Market Trends** | City-wise historical property price trends visualized via Chart.js |
+| 🧮 **ROI Calculator** | Interactive tool for rental yield and capital appreciation projections |
+| 👥 **CRM Management** | Directories for agents and clients, with full enquiry lifecycle tracking |
+| 🔐 **Role-Based Auth** | Pre-configured authentication for Admin, Agent, and Investor roles |
 
 ---
 
 ## 2. Tech Stack
 
-| Layer | Technology | Version |
-|---|---|---|
-| Framework | Angular | `^21.2.0` |
-| Language | TypeScript | `~5.9.2` |
-| Rendering | Angular SSR (`@angular/ssr`) | `^21.2.28` |
-| Server | Express.js | `^5.1.0` |
-| Charts | Chart.js + ng2-charts | `^4.6.1` / `^10.0.0` |
-| Reactive | RxJS | `~7.8.0` |
-| UI Toolkit | Angular CDK | `^21.2.14` |
-| Testing | Vitest | `^4.0.8` |
-| Formatting | Prettier | `^3.8.1` |
-| Package Mgr | npm | `11.11.0` |
+| Layer | Technology | Version | Purpose |
+|---|---|---|---|
+| Framework | Angular | `^21.2.0` | Standalone component architecture & routing |
+| Language | TypeScript | `~5.9.2` | Static typing and interfaces |
+| Rendering & Server | `@angular/ssr` + Express | `^21.2.28` / `^5.1.0` | Server-Side Rendering and production server |
+| Reactive State | RxJS | `~7.8.0` | `BehaviorSubject` reactive streams |
+| Visualizations | Chart.js + ng2-charts | `^4.6.1` / `^10.0.0` | Market trend charts and data graphs |
+| UI Utilities | Angular CDK | `^21.2.14` | Component development kit utilities |
+| Unit Testing | Vitest | `^4.0.8` | Component and service unit tests |
+| Code Formatting | Prettier | `^3.8.1` | Code style enforcement |
 
 ---
 
@@ -70,75 +58,50 @@ The **Real Estate Platform** is a full-featured, Angular-based single-page appli
 ```
 Real-Estate-Platform/
 ├── public/
-│   └── data/
-│       ├── properties.json       # Seed data for property listings
-│       └── investments.json      # Seed data for portfolio investments
+│   └── data/                     # Seed JSON datasets
+│       ├── agents.json           # Seed agent records
+│       ├── clients.json          # Seed client records
+│       ├── enquiries.json        # Seed customer enquiries
+│       ├── investments.json      # Seed portfolio investments
+│       ├── market-trends.json    # Seed city price trend data
+│       └── properties.json       # Seed property listings
 ├── src/
-│   ├── index.html                # Root HTML entry point
-│   ├── main.ts                   # Client bootstrap
-│   ├── main.server.ts            # SSR bootstrap
-│   ├── server.ts                 # Express server for SSR
+│   ├── index.html                # Application root HTML
+│   ├── main.ts                   # Client application entry point
+│   ├── main.server.ts            # Server-Side Rendering entry point
+│   ├── server.ts                 # Express SSR server
 │   ├── styles.css                # Global styles
 │   └── app/
 │       ├── app.ts                # Root AppComponent
-│       ├── app.html              # Root template
-│       ├── app.css               # Root styles
-│       ├── app.routes.ts         # All application routes
-│       ├── app.config.ts         # App-level providers & config
-│       ├── app.config.server.ts  # SSR-specific config merge
-│       ├── app.routes.server.ts  # SSR route configuration
+│       ├── app.routes.ts         # Application routing configuration
+│       ├── app.config.ts         # Client providers & app configuration
+│       ├── app.config.server.ts  # SSR configuration merge
 │       │
 │       ├── core/
 │       │   ├── guards/
-│       │   │   └── auth.guard.ts          # CanActivateFn route guard
+│       │   │   └── auth.guard.ts           # Functional route guard (CanActivateFn)
 │       │   ├── models/
-│       │   │   └── models.ts              # All TypeScript interfaces
+│       │   │   └── models.ts               # Core TypeScript domain models
 │       │   └── services/
-│       │       ├── auth.service.ts        # Authentication service
-│       │       ├── property.service.ts    # Property CRUD service
-│       │       ├── agent.service.ts       # Agent management service
-│       │       ├── client.service.ts      # Client management service
-│       │       ├── enquiry.service.ts     # Enquiry CRUD service
-│       │       ├── compare.service.ts     # Property compare service
-│       │       ├── portfolio.service.ts   # Investment portfolio service
-│       │       └── market-insight.service.ts  # Market trend data service
+│       │       ├── agent.service.ts        # Agent CRM data service
+│       │       ├── auth.service.ts         # Authentication & session service
+│       │       ├── client.service.ts       # Client CRM data service
+│       │       ├── compare.service.ts      # Property comparison engine service
+│       │       ├── enquiry.service.ts      # Enquiry management data service
+│       │       ├── market-insight.service.ts # Market trends data service
+│       │       ├── portfolio.service.ts    # Investment & ROI computation service
+│       │       ├── property.service.ts     # Property listing CRUD service
+│       │       └── search.service.ts       # Multi-parameter search & sort service
 │       │
-│       ├── listings/
-│       │   ├── property-list/    # Paginated property listing page
-│       │   ├── property-detail/  # Single property view with gallery
-│       │   ├── property-form/    # Add / Edit property form
-│       │   └── image-gallery/    # Lightbox-style image gallery
-│       │
-│       ├── search/
-│       │   ├── search-page/      # Main search results page
-│       │   ├── filter-panel/     # Sidebar filter controls
-│       │   └── compare-page/     # Side-by-side property comparison
-│       │
-│       ├── crm/
-│       │   ├── login/            # Login form
-│       │   ├── agent-list/       # Agent directory
-│       │   ├── client-list/      # Client directory
-│       │   ├── enquiry-list/     # Enquiry management table
-│       │   └── enquiry-form/     # Submit / manage enquiry form
-│       │
-│       ├── portfolio/
-│       │   ├── dashboard/        # Portfolio summary dashboard
-│       │   ├── portfolio-list/   # Investments list with CRUD
-│       │   ├── market-trends/    # Market trend charts
-│       │   └── roi-calculator/   # ROI computation tool
-│       │
-│       └── shared/
-│           ├── navbar/           # Global navigation bar
-│           └── not-found/        # 404 page component
+│       ├── listings/             # Property list, detail, form & image gallery
+│       ├── search/               # Search results, filter panel & comparison view
+│       ├── crm/                  # Login, agent directory, client directory & enquiries
+│       ├── portfolio/            # Dashboard, investments list, market trends & ROI calculator
+│       └── shared/               # Navbar & 404 NotFound components
 │
-├── angular.json                  # Angular CLI workspace config
-├── package.json                  # Node dependencies & scripts
-├── tsconfig.json                 # Root TypeScript config
-├── tsconfig.app.json             # App-specific TS config
-├── tsconfig.spec.json            # Test-specific TS config
-├── .prettierrc                   # Prettier code formatting rules
-├── .editorconfig                 # Editor whitespace/indent rules
-└── .gitignore                    # Git exclusions
+├── angular.json                  # Angular CLI build & workspace configuration
+├── package.json                  # Project dependencies & scripts
+└── tsconfig.json                 # TypeScript compiler configuration
 ```
 
 ---
@@ -147,449 +110,154 @@ Real-Estate-Platform/
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) `>= 20.x`
-- [npm](https://www.npmjs.com/) `>= 11.x`
-- [Angular CLI](https://angular.dev/tools/cli) `>= 21.x`
+- **Node.js** `>= 20.x`
+- **npm** `>= 10.x`
 
-### Installation
+### Installation & Run
 
 ```bash
-# 1. Clone the repository
-git clone <repository-url>
-cd Real-Estate-Platform
-
-# 2. Install dependencies
+# 1. Install dependencies
 npm install
 
-# 3. Start the development server
+# 2. Start development server
 npm start
-# or
-ng serve
 ```
 
-Open your browser at `http://localhost:4200/`. The app auto-reloads on file changes.
+Navigate to `http://localhost:4200/`. The application will automatically reload when source files change.
 
 ### Demo Login Credentials
 
-| Role | Username | Password |
-|---|---|---|
-| Admin | `admin` | `admin123` |
-| Agent | `agent` | `agent123` |
-| Investor | `investor` | `investor123` |
+The application uses client-side simulated authentication with three built-in roles:
 
-> **Note:** All data is stored in `localStorage`. No backend server is required for development.
+| Role | Username | Password | Access Scope |
+|---|---|---|---|
+| **Admin** | `admin` | `admin123` | Full access to all modules, CRM, properties, and portfolio |
+| **Agent** | `agent` | `agent123` | Access to Property Management and CRM (Agents, Clients, Enquiries) |
+| **Investor** | `investor` | `investor123` | Access to Portfolio Dashboard, Investments, Market Trends & ROI Calculator |
 
 ---
 
 ## 5. Application Routes
 
-All routes are lazily loaded for optimal performance.
+All routes are lazily loaded standalone components:
 
-| Path | Component | Auth Required | Description |
-|---|---|---|---|
+| Route | Component | Auth Required | Description |
+|---|---|:---:|---|
 | `/` | — | No | Redirects to `/properties` |
-| `/properties` | `PropertyList` | No | Browse all property listings |
-| `/properties/new` | `PropertyForm` | ✅ Yes | Add a new property |
-| `/properties/:id` | `PropertyDetail` | No | View property details & gallery |
-| `/properties/:id/edit` | `PropertyForm` | ✅ Yes | Edit an existing property |
-| `/search` | `SearchPage` | No | Search with filters |
-| `/compare` | `ComparePage` | No | Side-by-side property compare |
-| `/login` | `Login` | No | Authentication page |
+| `/properties` | `PropertyList` | No | Browse all property cards with filters |
+| `/properties/new` | `PropertyForm` | ✅ Yes | Add a new property listing |
+| `/properties/:id` | `PropertyDetail` | No | Full property details, specs, gallery & enquiry |
+| `/properties/:id/edit` | `PropertyForm` | ✅ Yes | Edit an existing property listing |
+| `/search` | `SearchPage` | No | Multi-parameter search with sidebar filter panel |
+| `/compare` | `ComparePage` | No | Side-by-side comparison table (up to 3 properties) |
+| `/login` | `Login` | No | Authentication page with pre-filled demo role buttons |
 | `/crm/agents` | `AgentList` | ✅ Yes | Manage real estate agents |
-| `/crm/clients` | `ClientList` | ✅ Yes | Manage clients |
-| `/crm/enquiries` | `EnquiryList` | ✅ Yes | View & manage enquiries |
-| `/portfolio/dashboard` | `Dashboard` | ✅ Yes | Portfolio summary & KPIs |
-| `/portfolio/investments` | `PortfolioList` | ✅ Yes | Track investment assets |
-| `/portfolio/trends` | `MarketTrends` | ✅ Yes | Market trend charts |
-| `/portfolio/roi-calculator` | `RoiCalculator` | ✅ Yes | Calculate property ROI |
-| `/**` | `NotFound` | No | 404 fallback page |
+| `/crm/clients` | `ClientList` | ✅ Yes | Manage clients & investment preferences |
+| `/crm/enquiries` | `EnquiryList` | ✅ Yes | Review and update enquiry lifecycle statuses |
+| `/portfolio/dashboard` | `Dashboard` | ✅ Yes | Executive portfolio metrics & financial summary |
+| `/portfolio/investments` | `PortfolioList` | ✅ Yes | Investment asset ledger with CRUD operations |
+| `/portfolio/trends` | `MarketTrends` | ✅ Yes | Chart.js price per sq ft trend graphs by city |
+| `/portfolio/roi-calculator` | `RoiCalculator` | ✅ Yes | Interactive yield and appreciation calculator |
+| `/**` | `NotFound` | No | 404 page for unmatched routes |
 
-> **Important:** `/properties/new` is declared **before** `/properties/:id` in the route configuration to prevent `'new'` being interpreted as an ID parameter.
-
----
-
-## 6. Core Modules
-
-### Data Models
-
-**File:** [`src/app/core/models/models.ts`](src/app/core/models/models.ts)
-
-All TypeScript interfaces used across the application:
-
-#### `Property`
-```ts
-interface Property {
-  id: string;
-  title: string;
-  description: string;
-  price: number;              // In INR (₹)
-  type: 'Apartment' | 'Villa' | 'Commercial' | 'Plot' | 'Penthouse';
-  city: string;
-  address: string;
-  bedrooms: number;
-  bathrooms: number;
-  area: number;               // In sq ft
-  pricePerSqFt: number;       // Calculated from price / area
-  amenities: string[];
-  images: string[];
-  featured?: boolean;
-  createdAt: string;          // ISO date string
-  agentId?: string;
-}
-```
-
-#### `Agent`
-```ts
-interface Agent {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  city: string;
-  image?: string;
-  rating?: number;
-  activeListings?: number;
-}
-```
-
-#### `Client`
-```ts
-interface Client {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  city: string;
-  budget?: number;
-  preferredType?: string;
-}
-```
-
-#### `Enquiry`
-```ts
-interface Enquiry {
-  id: string;
-  propertyId: string;
-  propertyTitle?: string;
-  clientName: string;
-  clientEmail: string;
-  clientPhone: string;
-  message: string;
-  status: 'New' | 'In Progress' | 'Closed';
-  date: string;               // ISO date string
-}
-```
-
-#### `Investment`
-```ts
-interface Investment {
-  id: string;
-  propertyId: string;
-  propertyTitle: string;
-  city: string;
-  purchasePrice: number;
-  currentValue: number;
-  monthlyRent: number;
-  purchaseDate: string;       // YYYY-MM-DD
-}
-```
-
-#### `MarketTrend`
-```ts
-interface MarketTrend {
-  city: string;
-  month: string;              // e.g. "Jan" or "2026-01"
-  avgPricePerSqFt: number;
-}
-```
-
-#### `SearchFilter`
-```ts
-interface SearchFilter {
-  keyword?: string;
-  city?: string;
-  type?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  bedrooms?: number;
-  sortBy?: 'price-asc' | 'price-desc' | 'newest' | 'area';
-}
-```
+> **Note:** `/properties/new` is registered before `/properties/:id` in `app.routes.ts` to ensure `new` is not evaluated as a parameter ID.
 
 ---
 
-### Services
+## 6. Core Services & State Architecture
 
-All services are `providedIn: 'root'` (singletons) and use `BehaviorSubject` for reactive state with `localStorage` persistence as the data layer.
+All services are singletons (`providedIn: 'root'`) backed by RxJS `BehaviorSubject` reactive streams and synchronized with `localStorage`.
 
-#### `PropertyService`
-**File:** [`src/app/core/services/property.service.ts`](src/app/core/services/property.service.ts)
-
-Manages the full lifecycle of property listings.
-
-| Method | Signature | Description |
+| Service | Primary Methods & Observables | Responsibility |
 |---|---|---|
-| `getAll()` | `Observable<Property[]>` | Returns all properties reactively |
-| `getById(id)` | `Observable<Property \| undefined>` | Find property by ID |
-| `add(property)` | `Observable<Property>` | Add new property (auto-generates ID, `createdAt`, `pricePerSqFt`) |
-| `update(property)` | `Observable<Property>` | Update existing property |
-| `delete(id)` | `Observable<boolean>` | Remove property by ID |
-
-**Data flow:** `localStorage` → `BehaviorSubject` → `Observable` → Components
-
-#### `AuthService`
-**File:** [`src/app/core/services/auth.service.ts`](src/app/core/services/auth.service.ts)
-
-Provides mock authentication with three pre-configured user roles.
-
-| Method | Signature | Description |
-|---|---|---|
-| `login(username, password)` | `Observable<boolean>` | Validate credentials and persist session |
-| `logout()` | `void` | Clear session from memory and localStorage |
-| `isAuthenticated()` | `boolean` | Synchronous auth state check |
-| `getUser()` | `AuthUser \| null` | Returns current logged-in user object |
-
-**Observables:**
-- `currentUser$` — emits the active `AuthUser` or `null`
-- `isLoggedIn$` — emits `boolean` login state
-
-#### `CompareService`
-**File:** [`src/app/core/services/compare.service.ts`](src/app/core/services/compare.service.ts)
-
-Manages property comparison selection (max 3 at a time).
-
-| Method | Signature | Description |
-|---|---|---|
-| `add(id)` | `{ success, message }` | Add property ID to compare list |
-| `remove(id)` | `void` | Remove property ID from compare list |
-| `clear()` | `void` | Clear entire compare list |
-| `isInCompare(id)` | `boolean` | Check if a property is in compare list |
-
-**Observables:**
-- `selectedIds$` — list of selected property IDs
-- `comparedProperties$` — full `Property[]` objects for selected IDs
-- `count$` — count of currently selected items
-
-#### `PortfolioService`
-**File:** [`src/app/core/services/portfolio.service.ts`](src/app/core/services/portfolio.service.ts)
-
-Tracks investment assets with computed financial metrics.
-
-| Observable | Type | Description |
-|---|---|---|
-| `investments$` | `Observable<Investment[]>` | All tracked investments |
-| `totalInvested$` | `Observable<number>` | Sum of all purchase prices |
-| `currentValue$` | `Observable<number>` | Sum of all current values |
-| `gainLoss$` | `Observable<number>` | Current value minus purchase price |
-| `gainLossPercent$` | `Observable<number>` | Gain/loss as a percentage |
-| `totalMonthlyRent$` | `Observable<number>` | Sum of monthly rental income |
-| `averageRoi$` | `Observable<number>` | Annual rent / total invested × 100 |
-
-#### `AgentService` · `ClientService` · `EnquiryService` · `MarketInsightService`
-
-Similar pattern — each manages its respective entity (Agent, Client, Enquiry, MarketTrend) via `BehaviorSubject` + `localStorage` with full CRUD operations.
+| **`PropertyService`** | `getAll()`, `getById()`, `add()`, `update()`, `delete()`<br>`properties$` | Manages property listings, auto-generates IDs, calculates price/sq ft, and syncs with `re_properties`. |
+| **`SearchService`** | `updateFilter()`, `resetFilters()`<br>`filters$`, `results$` | Handles multi-parameter filtering, debounced query execution, and sorting logic over `PropertyService`. |
+| **`CompareService`** | `add()`, `remove()`, `clear()`, `isInCompare()`<br>`selectedIds$`, `comparedProperties$`, `count$` | Manages comparison state with a hard limit of 3 properties; persists selected IDs in `re_compare`. |
+| **`AuthService`** | `login()`, `logout()`, `isAuthenticated()`, `getUser()`<br>`currentUser$`, `isLoggedIn$` | Validates demo credentials, tracks session state, and persists active profile in `re_auth_user`. |
+| **`PortfolioService`** | `getAll()`, `getById()`, `add()`, `update()`, `delete()`<br>`totalInvested$`, `currentValue$`, `gainLoss$`, `gainLossPercent$`, `totalMonthlyRent$`, `averageRoi$` | Manages investment assets and derives real-time computed financial metrics via RxJS operators. |
+| **`AgentService`** | `getAll()`, `getById()`, `add()`, `update()`, `delete()`<br>`agents$` | Manages agent records (ratings, active listings, contact info) synced with `re_agents`. |
+| **`ClientService`** | `getAll()`, `getById()`, `add()`, `update()`, `delete()`<br>`clients$` | Manages client records (budget, preferred property type) synced with `re_clients`. |
+| **`EnquiryService`** | `getAll()`, `add()`, `updateStatus()`, `delete()`<br>`enquiries$` | Manages property inquiries and tracks status progression (`New` → `In Progress` → `Closed`). |
+| **`MarketInsightService`** | `getAllTrends()`, `getTrendsByCity()`, `getCities()` | Loads historical price/sq ft trend records from `market-trends.json`. |
+| **`authGuard`** | Functional `CanActivateFn` | Protects private routes; redirects unauthenticated visitors to `/login?returnUrl=...`. |
 
 ---
 
-### Auth Guard
+## 7. Data Models
 
-**File:** [`src/app/core/guards/auth.guard.ts`](src/app/core/guards/auth.guard.ts)
+Defined in [`src/app/core/models/models.ts`](src/app/core/models/models.ts):
 
-A functional `CanActivateFn` guard that protects authenticated routes.
-
-**Behavior:**
-- If user **is authenticated** → allow navigation
-- If user **is not authenticated** → redirect to `/login?returnUrl=<requested-path>`
-
-**Protected routes include:**
-- `/properties/new`, `/properties/:id/edit`
-- `/crm/agents`, `/crm/clients`, `/crm/enquiries`
-- `/portfolio/dashboard`, `/portfolio/investments`, `/portfolio/trends`, `/portfolio/roi-calculator`
+| Interface | Core Fields | Description |
+|---|---|---|
+| **`Property`** | `id`, `title`, `description`, `price`, `type`, `city`, `address`, `bedrooms`, `bathrooms`, `area`, `pricePerSqFt`, `amenities`, `images`, `featured`, `createdAt`, `agentId` | Complete representation of a real estate listing. Supported types: `Apartment`, `Villa`, `Commercial`, `Plot`, `Penthouse`. |
+| **`Investment`** | `id`, `propertyId`, `propertyTitle`, `city`, `purchasePrice`, `currentValue`, `monthlyRent`, `purchaseDate` | Individual portfolio asset entry used for portfolio analytics. |
+| **`Agent`** | `id`, `name`, `email`, `phone`, `city`, `image`, `rating`, `activeListings` | Real estate agent profile with performance and contact details. |
+| **`Client`** | `id`, `name`, `email`, `phone`, `city`, `budget`, `preferredType` | Prospective client profile with budget and property preferences. |
+| **`Enquiry`** | `id`, `propertyId`, `propertyTitle`, `clientName`, `clientEmail`, `clientPhone`, `message`, `status`, `date` | Property inquiry record. Status options: `New`, `In Progress`, `Closed`. |
+| **`MarketTrend`** | `city`, `month`, `avgPricePerSqFt` | Historical price data point for city-level trend charts. |
+| **`SearchFilter`** | `keyword`, `city`, `type`, `minPrice`, `maxPrice`, `bedrooms`, `sortBy` | Filter parameters for search queries. Sort options: `price-asc`, `price-desc`, `newest`, `area`. |
+| **`AuthUser`** | `username`, `name`, `role`, `email` | Authenticated user session. Roles: `admin`, `agent`, `investor`. |
 
 ---
 
-## 7. Feature Modules
+## 8. Authentication & Access Control
 
-### Property Listings
+Authentication is managed purely on the client side without external backend dependencies:
 
-| Component | Path | Description |
-|---|---|---|
-| `PropertyList` | `/properties` | Grid/list view of all properties with pagination and featured flags |
-| `PropertyDetail` | `/properties/:id` | Full property page with image gallery, specs, amenities, and enquiry button |
-| `PropertyForm` | `/properties/new` · `/properties/:id/edit` | Reactive form to create or edit a property |
-| `ImageGallery` | (embedded) | Lightbox image viewer embedded in property detail |
-
-### Search & Compare
-
-| Component | Path | Description |
-|---|---|---|
-| `SearchPage` | `/search` | Displays filtered property results |
-| `FilterPanel` | (embedded in search) | Sidebar with keyword, city, type, price, bedroom filters and sort options |
-| `ComparePage` | `/compare` | Side-by-side property comparison table (up to 3 properties) |
-
-### CRM (Auth + Agents + Clients + Enquiries)
-
-| Component | Path | Description |
-|---|---|---|
-| `Login` | `/login` | Form-based login with username/password and returnUrl support |
-| `AgentList` | `/crm/agents` | Searchable table of agents with CRUD controls |
-| `ClientList` | `/crm/clients` | Searchable table of clients with CRUD controls |
-| `EnquiryList` | `/crm/enquiries` | Enquiry management with status update (New / In Progress / Closed) |
-| `EnquiryForm` | (embedded) | Form to submit a new property enquiry |
-
-### Portfolio & Market Insights
-
-| Component | Path | Description |
-|---|---|---|
-| `Dashboard` | `/portfolio/dashboard` | Summary cards: total invested, current value, gain/loss %, monthly rent, avg ROI |
-| `PortfolioList` | `/portfolio/investments` | Full table of investment assets with add/edit/delete |
-| `MarketTrends` | `/portfolio/trends` | Line charts of average price per sq ft by city & month (Chart.js) |
-| `RoiCalculator` | `/portfolio/roi-calculator` | Interactive calculator for rental yield and capital appreciation |
+- **Session Storage:** Active session data is stored in `localStorage` under `re_auth_user`.
+- **SSR Safety:** Services check `typeof window !== 'undefined'` before accessing browser storage APIs, preventing SSR execution crashes.
+- **Route Guard:** `authGuard` intercepts unauthorized navigation attempts to protected routes (`/crm/*`, `/portfolio/*`, `/properties/new`, `/properties/:id/edit`) and redirects to `/login` with the destination preserved in the `returnUrl` query parameter.
 
 ---
 
-## 8. Authentication
+## 9. Data Persistence & Seed Assets
 
-This platform uses a **client-side mock authentication** system — no backend API is involved.
+The platform uses a two-tier data resolution strategy:
 
-### User Roles
+1. **Local Storage Check:** On startup, each service inspects its dedicated `localStorage` key.
+2. **Seed Fallback:** If no data exists in storage, the service loads the initial dataset from `public/data/*.json` and seeds `localStorage`.
 
-| Role | Permissions |
-|---|---|
-| `admin` | Full access to all features |
-| `agent` | Access to CRM modules, property management |
-| `investor` | Access to portfolio and market insight modules |
-
-### Session Persistence
-
-Sessions are persisted in `localStorage` under the key `re_auth_user`. On page refresh, the stored session is restored automatically via `AuthService`.
-
-### Login Flow
-
-```
-User submits credentials
-  → AuthService.login()
-    → Match against mockUsers record
-      → Success: save to localStorage, emit currentUser$, redirect to returnUrl
-      → Failure: show error message
-```
-
----
-
-## 9. Data Persistence
-
-All data is stored client-side in the browser's `localStorage`. No external database or API is used.
-
-| localStorage Key | Data | Service |
+| Storage Key | Managed Entity | Seed Asset Path |
 |---|---|---|
-| `re_auth_user` | Logged-in user session | `AuthService` |
-| `re_properties` | All property listings | `PropertyService` |
-| `re_investments` | Portfolio investments | `PortfolioService` |
-| `re_compare` | Compare selection IDs | `CompareService` |
-| `re_agents` | Agent records | `AgentService` |
-| `re_clients` | Client records | `ClientService` |
-| `re_enquiries` | Enquiry records | `EnquiryService` |
-
-### Seed Data
-
-Initial data is loaded from static JSON files in `public/data/` when no localStorage cache exists:
-
-- `public/data/properties.json` — pre-loaded property listings
-- `public/data/investments.json` — pre-loaded portfolio investments
+| `re_auth_user` | Current user session | Initialized on login |
+| `re_properties` | Property listings | [`public/data/properties.json`](public/data/properties.json) |
+| `re_investments` | Portfolio investments | [`public/data/investments.json`](public/data/investments.json) |
+| `re_agents` | Agent directory | [`public/data/agents.json`](public/data/agents.json) |
+| `re_clients` | Client directory | [`public/data/clients.json`](public/data/clients.json) |
+| `re_enquiries` | Customer enquiries | [`public/data/enquiries.json`](public/data/enquiries.json) |
+| `re_compare` | Selected comparison IDs | Initialized on user selection |
+| — | Historical market trends | [`public/data/market-trends.json`](public/data/market-trends.json) |
 
 ---
 
-## 10. Build & Deployment
+## 10. Build, SSR & Testing
 
-### Available Scripts
+### Development & Build Commands
 
 ```bash
-# Start development server (http://localhost:4200)
+# Run local development server (port 4200)
 npm start
 
-# Production build (output: dist/)
+# Compile production build (outputs to dist/real-estate-platform)
 npm run build
 
-# Watch mode build (development)
+# Build with watch mode for development
 npm run watch
+```
 
-# Run unit tests
-npm test
+### Server-Side Rendering (SSR) Execution
 
-# Start SSR production server
+```bash
+# 1. Build the client and server bundles
+npm run build
+
+# 2. Run the Express SSR server
 npm run serve:ssr:real-estate-platform
 ```
 
-### SSR Deployment
-
-The app supports Angular Universal SSR via `@angular/ssr`. After building:
+### Running Tests
 
 ```bash
-npm run build
-node dist/real-estate-platform/server/server.mjs
-```
-
-The Express server handles SSR rendering and serves the Angular app.
-
----
-
-## 11. Testing
-
-Unit tests are written using **Vitest** (via Angular CLI integration).
-
-```bash
+# Execute unit tests with Vitest
 npm test
-# or
-ng test
 ```
-
-Test files follow the `*.spec.ts` convention and are co-located with their source files:
-
-- `auth.guard.spec.ts` — Guard unit tests
-- `auth.spec.ts` — AuthService tests
-- `property.spec.ts` — PropertyService tests
-- `compare.spec.ts` — CompareService tests
-- `portfolio.spec.ts` — PortfolioService tests
-- Component-level specs for each feature component
-
----
-
-## 12. Configuration Files
-
-| File | Purpose |
-|---|---|
-| [`angular.json`](angular.json) | Angular CLI workspace & build configuration |
-| [`tsconfig.json`](tsconfig.json) | Root TypeScript compiler options |
-| [`tsconfig.app.json`](tsconfig.app.json) | Application-specific TypeScript config |
-| [`tsconfig.spec.json`](tsconfig.spec.json) | Test-specific TypeScript config |
-| [`.prettierrc`](.prettierrc) | Code formatting rules (Prettier) |
-| [`.editorconfig`](.editorconfig) | Editor whitespace and indentation rules |
-| [`.gitignore`](.gitignore) | Files excluded from version control |
-
----
-
-## 13. Known Limitations & Future Improvements
-
-### Current Limitations
-
-- **No real backend** — All data is stored in `localStorage`. Data is lost if the browser storage is cleared.
-- **Mock authentication** — Credentials are hardcoded in the service. Not suitable for production use.
-- **No image upload** — Property images use Unsplash URLs or user-provided image links.
-- **Single-user session** — No multi-user or concurrent session support.
-
-### Suggested Future Improvements
-
-- [ ] Integrate a real REST API or Firebase backend for data persistence
-- [ ] Add JWT-based authentication with refresh tokens
-- [ ] Implement server-side search and filtering
-- [ ] Add image upload support (e.g., Firebase Storage / Cloudinary)
-- [ ] Add role-based UI restrictions (hide elements based on `AuthUser.role`)
-- [ ] Add pagination API support for large datasets
-- [ ] Add unit test coverage for all components
-- [ ] Add end-to-end tests using Playwright or Cypress
-- [ ] Add PWA (Progressive Web App) support
-- [ ] Implement real-time notifications for new enquiries
-
----
-
-*Documentation maintained for Real Estate Platform — Angular 21 | Last updated: November 2026*
